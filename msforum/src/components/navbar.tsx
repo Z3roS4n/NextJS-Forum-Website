@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
 const NavBar = () => {
     return (
@@ -10,6 +11,11 @@ const NavBar = () => {
             <div>
                 <Link href='/articles'>Articles</Link>
                 <Link href='/profile'>Profile</Link>
+
+                <SignedIn>
+
+                </SignedIn>
+                
             </div>
         </nav>
     );
