@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserData {
+  iduser       String        @id @db.VarChar(32)
+  email        String        @db.VarChar(200)
+  idsub        Int?
+
+  // Relazione con subscriptions (opzionale)
+  subscription Subscriptions? @relation("SubscriptionToUserData", fields: [idsub], references: [idsub], onDelete: SetNull)
+
+  // Relazione inversa con articoli
+  articles     Article[]
+
+  @@map("userdata")
+}
+
+model Subscriptions {
+  idsub       Int        @id @default(autoincrement())
+  name        String     @db.VarChar(100)
+  description String     @db.VarChar(1024)
+
+  // Relazione con userdata
+  users       UserData[] @relation("SubscriptionToUserData")
+
+  @@map("subscriptions")
+}
+
+model Article {
+  idart     Int       @id @default(autoincrement())
+  content   String    @db.Text
+  iduser    String    @db.VarChar(32)
+  idcat     Int?
+  title     String    @db.VarChar(256)
+
+  // Relazioni
+  author    UserData  @relation(fields: [iduser], references: [iduser])
+  category  Category? @relation(fields: [idcat], references: [idcat])
+
+  @@map("article")
+}
+
+model Category {
+  idcat       Int       @id @default(autoincrement())
+  name        String    @db.VarChar(200)
+  description String?   @db.VarChar(1024)
+
+  articles    Article[]
+
+  @@map("category")
+}

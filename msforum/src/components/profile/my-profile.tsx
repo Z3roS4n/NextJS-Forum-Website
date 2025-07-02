@@ -44,7 +44,7 @@ const MyProfile = () => {
                         }
                     </div>
                 </div>
-                <div id="userProfileSection" className="ml-16 mr-48 mt-20 p-6 border-2 rounded-2xl w-3/4">
+                <div id="userProfileSection" className="ml-16 mr-48 mt-20 p-6 border-2 rounded-2xl w-3/4 overflow-y-scroll max-h-150">
                     <MyProfileSection
                         section={
                             (() => {

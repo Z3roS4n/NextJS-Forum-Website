@@ -25,6 +25,7 @@ const NavBar = () => {
                     <Image className="rounded-2xl ml-3" src={user.imageUrl ?? "/default-profile.png"} alt="Profile" width={30} height={30} />
                     : <p>N.D.</p>}
                     </Link>*/}
+                    <Link className="pr-6 font-medium" href='/articles/write'>Write</Link>
                     <UserButton userProfileUrl="/profile" showName></UserButton>
                 </SignedIn>
                 <SignedOut>
