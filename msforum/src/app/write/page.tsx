@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import WriteComp from "@/components/write/writeComp";
 import { SignedIn, SignedOut, useUser, UserProfile, SignIn } from "@clerk/nextjs";
 
@@ -8,7 +10,7 @@ export interface Categories {
 }
 
 const WriteArticle = async () => {
-    const cat_req = await fetch('http://localhost:3000/api/manageArticle?action=getExistingCategories');
+    const cat_req = await fetch('http://localhost:3000/api/manageArticle?action=getExistingCategories', { cache: 'no-store' });
     const categories: Categories[] = await cat_req.json();
 
     return (
