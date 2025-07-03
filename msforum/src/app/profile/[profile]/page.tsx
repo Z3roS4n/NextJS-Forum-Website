@@ -1,6 +1,6 @@
 interface Params {
     params: {
-        article: string;
+        profile: string;
     };
 }
 

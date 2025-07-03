@@ -27,9 +27,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
+      <head>
+        <script src="https://kit.fontawesome.com/e02d7efcb9.js" crossOrigin="anonymous"></script>
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <NavBar></NavBar>
-          {children}
+        <NavBar></NavBar>
+        {children}
       </body>
     </html>
     </ClerkProvider>

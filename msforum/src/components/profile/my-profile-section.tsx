@@ -53,11 +53,11 @@ const MyProfileSection = (props: Props) => {
             <h2 className="font-bold text-xl">{props.section.name}</h2>
             { props.section.sectionId == "informations" ? 
                 <>
-                    <div className="flex flex-row" id="profile-image">
-                        <div>
-                            <Image className="rounded-full m-6" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
+                    <div className="flex lg:flex-row flex-col lg:justify-around lg:items-center" id="profile-image">
+                        <div className="not-lg:flex not-lg:justify-center">
+                            <Image className="rounded-full m-6 w-1/2 lg:w-1/1" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
                         </div>
-                        <div id="profile-info" className="flex flex-col m-6 text-md w-1/3">
+                        <div id="profile-info" className="flex flex-col lg:m-6 text-md lg:w-1/2">
 
                             {/* USERNAME */}
                             <ProfileUsername></ProfileUsername>
@@ -66,7 +66,7 @@ const MyProfileSection = (props: Props) => {
                             <ProfileEmail></ProfileEmail>
                         </div>
                     </div>
-                    <div id="articles" className="flex flex-col w-1/1">
+                    <div id="articles" className="flex flex-col mt-6 w-1/1">
                         {/* ARTICLES */}
                         <ProfileArticles userId={user?.id ?? ""}></ProfileArticles>
                     </div>

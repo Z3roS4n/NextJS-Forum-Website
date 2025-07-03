@@ -16,12 +16,19 @@ const MyProfile = () => {
     const sections = [
         {
             id: "informations",
-            name: "Informations"
+            name: "Informations",
+            icon: "fa-solid fa-circle-info"
         },
         {
             id: "security",
-            name: "Security"
-        }
+            name: "Security",
+            icon: "fa-solid fa-shield"
+        },
+        {
+            id: "badges",
+            name: "Badges",
+            icon: "fa-solid fa-certificate"
+        },
     ];
 
     const changeSection = (sectionId: string) => {
@@ -29,22 +36,27 @@ const MyProfile = () => {
     }
 
     return (
-        <div id="userProfile" className="flex flex-row justify-around">
+        <div id="userProfile" className="flex lg:flex-row flex-col justify-around">
             { isLoaded ? (
                 <>
-                <div id="userProfileSideBar" className="ml-48 mt-20 p-6 border-2 rounded-2xl w-1/5 h-150">
+                <div id="userProfileSideBar" className="ml-10 mr-10 mt-6 lg:ml-48 lg:mt-20 p-6 border-2 rounded-2xl lg:w-1/5 lg:h-150">
                     <h2 className="font-bold text-xl">{user?.username}</h2>
-                    <div className="flex flex-col pt-2">
+                    <div className="flex lg:flex-col flex-row pt-2">
                         {
                             sections.map((sec) => (
-                                <p key={sec.id} className="items-center hover:bg-gray-200 rounded-md p-2" id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
-                                    {sec.name}
-                                </p>
+                                <div key={sec.id}>
+                                    <p className="not-lg:hidden items-center hover:bg-gray-200 rounded-md p-2" id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
+                                        {sec.name}
+                                    </p>
+                                    <p className={`lg:hidden text-2xl items-center hover:bg-gray-200 rounded-md p-2`} id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
+                                        <i className={sec.icon}></i>
+                                    </p>
+                                </div>
                             ))
                         }
                     </div>
                 </div>
-                <div id="userProfileSection" className="ml-16 mr-48 mt-20 p-6 border-2 rounded-2xl w-3/4 overflow-y-scroll max-h-150">
+                <div id="userProfileSection" className="ml-10 mr-10 lg:mr-48 mt-10 lg:mt-20 p-6 border-2 rounded-2xl lg:w-3/4 overflow-y-scroll overflow-x-hidden lg:max-h-150 max-h-220">
                     <MyProfileSection
                         section={
                             (() => {
