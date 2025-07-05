@@ -9,7 +9,7 @@ datasource db {
 }
 
 model UserData {
-  iduser       String        @id @db.VarChar(32)
+  user_id       String        @id @db.VarChar(32)
   email        String        @db.VarChar(200)
   idsub        Int?
 
@@ -36,12 +36,12 @@ model Subscriptions {
 model Article {
   idart     Int       @id @default(autoincrement())
   content   String    @db.Text
-  iduser    String    @db.VarChar(32)
+  user_id    String    @db.VarChar(32)
   idcat     Int?
   title     String    @db.VarChar(256)
 
   // Relazioni
-  author    UserData  @relation(fields: [iduser], references: [iduser])
+  author    UserData  @relation(fields: [user_id], references: [user_id])
   category  Category? @relation(fields: [idcat], references: [idcat])
 
   @@map("article")

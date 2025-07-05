@@ -11,10 +11,10 @@ export async function POST(req: NextRequest) {
 
         const userInfo = await prisma.userData.findUnique({
             where: {
-                iduser: user?.id,
+                user_id: user?.id,
             },
             select: {
-                iduser: true,
+                user_id: true,
                 subscription: {
                     select: {
                         name: true,

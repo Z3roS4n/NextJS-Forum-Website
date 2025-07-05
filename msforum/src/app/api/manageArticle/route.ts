@@ -4,8 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 interface Article {
     id: number;
-    userId: string;
-    categoryId: string; 
+    user_id: string;
+    categoryId: number; 
+    content: string;
+    title: string;
 }
 
 export async function GET(req: NextRequest) {
@@ -37,6 +39,18 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     try {
         const article: Article = await req.json();
+
+        const submit = await prisma.article.create({
+            data: {
+                user_id: article.user_id,
+                idcat: article.categoryId ?? null,
+                content: article.content,
+                title: article.title
+            },
+            select: {
+                user_id: true,        
+            }
+        })
 
         return NextResponse.json({ message: "Article received", article });
     } catch (error) {

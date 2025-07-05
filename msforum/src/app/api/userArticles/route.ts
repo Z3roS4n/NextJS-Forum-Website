@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
         const articles = await prisma.article.findMany({
             where: {
-                iduser: user?.id,
+                user_id: user?.id,
             },
             select: {
                 idart: true,
