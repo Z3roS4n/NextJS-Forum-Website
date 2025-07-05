@@ -35,6 +35,8 @@ const WriteComp = () => {
         fetchCategories();
     }, []);
 
+    const redirectToProfile = () => router.push("/profile");
+
     const onUpdate = (type: string) => {
         if (!user?.id) {
             // Handle the case where user id is not available (optional: show an error or return)
@@ -53,7 +55,7 @@ const WriteComp = () => {
                     cache: 'no-store', 
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify(articleData)
-                }).then(res => {res.ok ? router.push("/profile") : "ERROR"});
+                }).then(res => {res.ok ? redirectToProfile : "ERROR"});
         }       
     }
 
