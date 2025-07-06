@@ -40,9 +40,9 @@ const ArticlesComponent = ({articles, categories}: Params) => {
             </div>
 
             {articles.map((article: Article) => 
-                <div key={article.idart} className={"border-1 rounded-2xl p-2" + isHidden(article.idcat) + " " + searchTitle(article.title) }>
+                <div key={article.idart} className={"border-1 rounded-2xl p-2 " + isHidden(article.idcat) + " " + searchTitle(article.title) }>
                     <h2 className="font-bold text-xl">{article.title}</h2>
-                    <p>Category: {article.category.name}</p>
+                    <p>Category: {article.category?.name || "Nessuna categoria"}</p>
                     <p className="overflow-hidden text-ellipsis">{article.content}</p>
                     <div className="btn-primary">
                         <a href={`/articles/${article.idart}`}>Read Article</a>
