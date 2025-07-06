@@ -44,10 +44,8 @@ export async function POST(req: NextRequest) {
     }
 }
 
-// Se vuoi gestire altre HTTP method, ad esempio GET, puoi aggiungerle così:
-
 export async function GET(req: NextRequest) {
-  // Se vuoi abilitare una logica per GET, qui la metti
+
     return NextResponse.json(
         { message: "Method GET non implementata" },
         { status: 405 }
