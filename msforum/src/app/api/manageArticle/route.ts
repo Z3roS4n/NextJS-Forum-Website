@@ -1,14 +1,7 @@
 
 import { prisma } from "@/lib/prisma";
+import { Article } from "@/types/components";
 import { NextRequest, NextResponse } from 'next/server';
-
-interface Article {
-    id: number;
-    user_id: string;
-    categoryId: number; 
-    content: string;
-    title: string;
-}
 
 export async function GET(req: NextRequest) {
     try {
@@ -43,7 +36,7 @@ export async function POST(req: NextRequest) {
         const submit = await prisma.article.create({
             data: {
                 user_id: article.user_id,
-                idcat: article.categoryId ?? null,
+                idcat: article.idcat ?? null,
                 content: article.content,
                 title: article.title
             },

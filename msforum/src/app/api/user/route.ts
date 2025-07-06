@@ -9,14 +9,16 @@ export async function POST(req: NextRequest) {
     try {
         const user: User = await req.json();
 
-        const userInfo = await prisma.userData.findUnique({
+        const userInfo = await prisma.userdata.findUnique({
             where: {
                 user_id: user?.id,
             },
             select: {
                 user_id: true,
+                email: true,
                 subscription: {
                     select: {
+                        idsub: true,
                         name: true,
                     },
                 },

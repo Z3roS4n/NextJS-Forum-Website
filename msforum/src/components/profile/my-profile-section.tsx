@@ -10,6 +10,8 @@ import ProfileUsername from "./my-profile-section/username";
 import ProfileEmail from "./my-profile-section/email";
 import ProfileArticles from "./my-profile-section/articles";
 
+import { User_Subscription } from "@/types/components";
+
 interface Props {
     section: {
         sectionId: string,
@@ -17,21 +19,9 @@ interface Props {
     }
 }
 
-interface UserInfo {
-    iduser: string,
-    email: string
-}
-
-interface User {
-    iduser: string;
-    subscription: {
-        name: string;
-    };
-}
-
 const MyProfileSection = (props: Props) => {
     const { isSignedIn, isLoaded, user } = useUser();
-    const [userInfo, setUserInfo] = useState<User>();
+    const [userInfo, setUserInfo] = useState<User_Subscription>();
 
     useEffect(() => {
         const fetchUserInfo = async () => {

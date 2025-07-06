@@ -1,19 +1,12 @@
-import { useRouter } from "next/navigation";
+import { Article } from "@/types/components";
 import { useEffect, useState } from "react";
 
 interface ProfileArticlesProps {
     userId: string;
 }
 
-interface Article {
-    idart: number;
-    content: string;
-    title: string;
-}
-
 const ProfileArticles = ({ userId }: ProfileArticlesProps) => {
     const [articles, setArticles] = useState<Article[]>([]);
-    const router = useRouter()
 
     useEffect(
         () => {
@@ -33,19 +26,25 @@ const ProfileArticles = ({ userId }: ProfileArticlesProps) => {
         }, [userId]
     );
 
-    const goToArticle = (idart: number) => router.push(`articles/${idart}`)
+    const deleteArticle = async (idart: number) => {
+        //const delete_req = fetch(`/api/userArticles/${idart}`, { method: 'DELETE' })
+        return null; //TO BE IMPLEMENTED, NEED TO ADD ANOTHER LAYER OF SECURITY (AUTH KEY - GENERATED ON REGISTRATION - TO BE KEPT SECRET)
+    }
 
     return (
         <>
             <h2 className="font-bold text-xl">Articles</h2>
             <div className="flex flex-col">
                 {articles.map((article) =>
-                    <div key={article.idart} className="flex flex-row justify-between mt-2 p-2 border-2 rounded-xl" id={article.idart.toString()}>
+                    <div key={article.idart} className="flex flex-row justify-between mt-2 p-2 border-2 rounded-xl" id={article.idart?.toString()}>
                         <div className="overflow-hidden text-ellipsis">
                             <h3 className="font-bold">{article.title}</h3>
                             <p>{article.content.trim().substring(0, 128)}</p>
                         </div>
-                        <button type="button" onClick={() => goToArticle(article.idart)} className="text-nowrap p-2 pl-4 pr-4 mr-0 bg-blue-600 rounded-xl text-white hover:bg-blue-700 transition-colors delay-150">Go To Article</button>
+                        <div>
+                            <button className="btn-danger" onClick={() => article.idart !== null && deleteArticle(article.idart)}>Delete</button>
+                            <a className="btn-primary" href={`/articles/${article.idart}`}>Go To Article</a>
+                        </div>
                     </div>
                 )}
             </div>

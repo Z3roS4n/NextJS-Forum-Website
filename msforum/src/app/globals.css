@@ -195,4 +195,8 @@
   .btn-primary {
     @apply bg-blue-600 p-2 m-2 rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
   }
+
+    .btn-danger {
+    @apply bg-red-600 p-2 m-2 rounded-2xl text-white inline-block hover:bg-red-800 transition-colors duration-150;
+  }
 }

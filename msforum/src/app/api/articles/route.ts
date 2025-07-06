@@ -1,11 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-interface Response {
-    idcat: number
-}
-
-
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
@@ -19,14 +14,18 @@ export async function GET(req: NextRequest) {
                 title: true,
                 content: true,
                 user_id: true,
+                datetime: true,
                 category: {
                     select: {
-                    idcat: true,
-                    name: true,
-                    // aggiungi altri campi necessari da category
-                    }
-                }
-            }
+                        idcat: true,
+                        name: true,
+                        description: true
+                    }, 
+                },
+            },
+            orderBy: [
+                { datetime:  'desc' }
+            ]
         });
 
         return NextResponse.json(retrieveArticle)

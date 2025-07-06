@@ -1,11 +1,11 @@
 "use client"
 
-import { Article, Categories } from "@/app/articles/page";
+import { Article_Category, Category } from "@/types/components";
 import { useState } from "react";
 
 interface Params {
-    articles: Article[],
-    categories: Categories[]
+    articles: Article_Category[],
+    categories: Category[]
 }
 
 const ArticlesComponent = ({articles, categories}: Params) => {
@@ -23,8 +23,14 @@ const ArticlesComponent = ({articles, categories}: Params) => {
 
         const searchLen = title.length
 
-        if(artTitle.substring(0, searchLen) != title && !artTitle.includes(title, searchLen - 1)) return "hidden"; 
+        const articleTitle = artTitle.toLowerCase();
+        const searchedTitle = title.toLowerCase()
+
+        if(articleTitle.substring(0, searchLen) != searchedTitle && !articleTitle.includes(searchedTitle, searchLen - 1)) return "hidden"; 
     }
+
+    // TO BE IMPLEMENTED: Divide articles in pages containing 20 articles (every page loads all articles [FOR FAST SEARCH FUNCTION],
+    // but shows at interval of 20s only [0 - 20, 21 - 40, 41 - 60]); others will be *hidden* by the hidden class, such as filters.
 
     return (
         <> 
@@ -39,8 +45,8 @@ const ArticlesComponent = ({articles, categories}: Params) => {
                 </div>
             </div>
 
-            {articles.map((article: Article) => 
-                <div key={article.idart} className={"border-1 rounded-2xl p-2 " + isHidden(article.idcat) + " " + searchTitle(article.title) }>
+            {articles.map((article: Article_Category) => 
+                <div key={article.idart} className={"border-1 rounded-2xl p-2 " + isHidden(article.idcat ?? 0) + " " + searchTitle(article.title) }>
                     <h2 className="font-bold text-xl">{article.title}</h2>
                     <p>Category: {article.category?.name || "Nessuna categoria"}</p>
                     <p className="overflow-hidden text-ellipsis">{article.content}</p>

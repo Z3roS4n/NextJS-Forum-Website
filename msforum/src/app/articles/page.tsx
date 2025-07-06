@@ -1,26 +1,12 @@
 import ArticlesComponent from "@/components/articles/articlesComponent"
-
-export interface Article {
-    idart: number,
-    idcat: number,
-    user_id: string,
-    title: string,
-    content: string,
-    category: Categories
-}
-
-export interface Categories {
-    idcat: number,
-    name: string,
-    description: string
-}
+import { Article_Category, Category } from "@/types/components";
 
 const ArticlesPage = async () => {
     const req = await fetch("http://localhost:3000/api/articles", { method: 'GET' });
-    const articles: Article[] = await req.json()
+    const articles: Article_Category[] = await req.json()
 
     const req_cat = await fetch("http://localhost:3000/api/manageArticle?action=getExistingCategories", { method: 'GET' });
-    const categories: Categories[] = await req_cat.json();
+    const categories: Category[] = await req_cat.json();
 
     return (
         <>
