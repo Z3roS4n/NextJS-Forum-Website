@@ -4,7 +4,7 @@ import WriteComp from "@/components/write/writeComp";
 import { SignedIn, SignedOut, useUser, UserProfile, SignIn } from "@clerk/nextjs";
 
 export interface Categories {
-    id: number,
+    idcat: number,
     name: string,
     description: string,
 }

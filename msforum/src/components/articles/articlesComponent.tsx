@@ -23,7 +23,7 @@ const ArticlesComponent = ({articles, categories}: Params) => {
 
         const searchLen = title.length
 
-        if(artTitle.substring(0, searchLen) != title) return "hidden"; 
+        if(artTitle.substring(0, searchLen) != title && !artTitle.includes(title, searchLen - 1)) return "hidden"; 
     }
 
     return (

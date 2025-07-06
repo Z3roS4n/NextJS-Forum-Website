@@ -5,7 +5,7 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import React, { useState, useRef, useEffect } from "react";
 import { Categories, Article } from "../../app/write/page";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const WriteComp = () => {
     const router = useRouter();
@@ -64,7 +64,7 @@ const WriteComp = () => {
             <div className="flex flex-row not-lg:flex-col gap-2">
                 <h2 className="text-1/2xl font-bold">Category</h2>
                 <select className="text-1/2xl" title="Categories" name="categories" id="categories" onChange={(e) => setCategory(Number(e.target.value))}>
-                    {categories?.map((category, index) => <option key={index} value={category.id}>{category.name}</option>)}
+                    {categories?.map((category, index) => <option key={index} value={category.idcat}>{category.name}</option>)}
                 </select>
             </div>
             <div className="flex flex-col lg:m-2">
