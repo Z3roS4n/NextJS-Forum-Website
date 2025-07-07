@@ -34,7 +34,7 @@ const ArticlesComponent = ({articles, categories}: Params) => {
 
     return (
         <> 
-            <div>
+            <div className="flex flex-row gap-6">
                 <select name="cat" id="cat" title="Category" defaultValue={0} onChange={(e) => setCategory(Number(e.target.value))}>
                     <option value="0">All Categories</option>
                     {categories.map((category, index) => <option key={index} value={category.idcat}>{category.name}</option>)}
