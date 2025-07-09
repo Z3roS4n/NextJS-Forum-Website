@@ -193,7 +193,15 @@
   }
 
   .btn-primary {
-    @apply bg-blue-600 p-2 m-2 rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
+    @apply bg-blue-600 p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
+  }
+
+  .input-attached {
+    @apply rounded-tr-2xl rounded-br-2xl;
+  }
+
+  .button-attached {
+    @apply rounded-tl-2xl rounded-bl-2xl;
   }
 
     .btn-danger {

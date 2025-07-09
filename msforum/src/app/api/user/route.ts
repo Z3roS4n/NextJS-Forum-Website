@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
-interface User {
-    id: string;
-}
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const user: User = await req.json();
+        const user = await currentUser();
+
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const userInfo = await prisma.userdata.findUnique({
             where: {

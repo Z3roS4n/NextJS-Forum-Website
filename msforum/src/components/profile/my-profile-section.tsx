@@ -11,6 +11,7 @@ import ProfileEmail from "./my-profile-section/email";
 import ProfileArticles from "./my-profile-section/articles";
 
 import { User_Subscription } from "@/types/components";
+import SecurityPassword from "./security-section/password";
 
 interface Props {
     section: {
@@ -28,8 +29,7 @@ const MyProfileSection = (props: Props) => {
             const res = await fetch("http://localhost:3000/api/user", { 
                 cache: 'no-store', 
                 method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ id: user?.id })
+                headers: { 'Content-Type': 'application/json' }
             });
             const data = await res.json();
             setUserInfo(data);
@@ -37,13 +37,14 @@ const MyProfileSection = (props: Props) => {
         fetchUserInfo();
     }, []);
 
+    const selectedSection = (currentSection: string) => props.section.sectionId != currentSection ? "hidden" : "";
+
     return (
         <>
-        <div id={props.section.sectionId} className="flex flex-col">
-            <h2 className="font-bold text-xl">{props.section.name}</h2>
-            { props.section.sectionId == "informations" ? 
-                <>
-                    <div className="flex lg:flex-row flex-col lg:justify-around lg:items-center" id="profile-image">
+            <div id={props.section.sectionId} className="flex flex-col">
+                <h2 className="font-bold text-xl">{props.section.name}</h2>
+                <div className={selectedSection("informations")}>
+                    <div className="flex lg:flex-row flex-col lg:justify-around lg:items-center "  id="profile-image">
                         <div className="not-lg:flex not-lg:justify-center">
                             <Image className="rounded-full m-6 w-1/2 lg:w-1/1" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
                         </div>
@@ -60,13 +61,14 @@ const MyProfileSection = (props: Props) => {
                         {/* ARTICLES */}
                         <ProfileArticles userId={user?.id ?? ""}></ProfileArticles>
                     </div>
+                </div>
 
-                </> :
-                <>
-
-                </>
-            }
-        </div>
+                <div className={selectedSection("security")}>
+                    <div>
+                        <SecurityPassword></SecurityPassword>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }
