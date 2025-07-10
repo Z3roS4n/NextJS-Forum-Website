@@ -8,6 +8,17 @@ export interface Article_Category {
     category: Category;
 }
 
+export interface Article_Category_Author {
+    idart: number | null;
+    idcat: number | null;
+    user_id: string;
+    title: string;
+    content: string;
+    datetime: number | null;
+    category: Category;
+    author: Author;
+}
+
 export interface Article {
     idart: number | null;
     idcat: number | null;
@@ -27,6 +38,11 @@ export interface User_Subscription {
     user_id: string;
     email: string;
     subscription: Subscription;
+}
+
+export interface Author {
+    user_id: string;
+    email: string;
 }
 
 export interface Subscription {
