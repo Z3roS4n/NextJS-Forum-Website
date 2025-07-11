@@ -34,6 +34,16 @@ export interface Category {
     description: string;
 }
 
+export interface Comment_Author_Subscription {
+    idcomment: number;
+    content: string;
+    idart: number;
+    user_id: string;
+    reply_to: number;
+    author: Author_Subscription;
+    datetime: string;
+}
+
 export interface User_Subscription {
     user_id: string;
     email: string;
@@ -43,6 +53,14 @@ export interface User_Subscription {
 export interface Author {
     user_id: string;
     email: string;
+    username: string;
+}
+
+export interface Author_Subscription {
+    user_id: string;
+    email: string;
+    username: string;
+    subscription: Subscription;
 }
 
 export interface Subscription {

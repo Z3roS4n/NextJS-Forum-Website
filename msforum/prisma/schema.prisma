@@ -38,6 +38,7 @@ model Comment {
   content   String
   idart     Int
   user_id   String
+  reply_to  Int?
   datetime  DateTime @default(now())
 
   article   Article  @relation(fields: [idart], references: [idart])
@@ -73,6 +74,7 @@ model Userdata {
   user_id        String        @id
   subscriptionid Int?
   email          String
+  username       String @unique
   idsub          Int?
 
   subscription   Subscriptions? @relation(fields: [idsub], references: [idsub])

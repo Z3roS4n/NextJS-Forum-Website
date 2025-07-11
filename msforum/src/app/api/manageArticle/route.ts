@@ -33,6 +33,20 @@ export async function POST(req: NextRequest) {
     try {
         const article: Article = await req.json();
 
+        // Validate that the category exists if idcat is provided
+        if (article.idcat !== null && article.idcat !== undefined) {
+            const categoryExists = await prisma.category.findUnique({
+                where: { idcat: article.idcat }
+            });
+            
+            if (!categoryExists) {
+                return NextResponse.json(
+                    { error: "Category does not exist" },
+                    { status: 400 }
+                );
+            }
+        }
+
         const submit = await prisma.article.create({
             data: {
                 user_id: article.user_id,
