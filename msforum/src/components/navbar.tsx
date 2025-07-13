@@ -10,10 +10,10 @@ const NavBar = () => {
     return (
         <nav className="p-6 flex flex-row justify-between">
             <div>
-                <Image src={"/next.svg"} alt={"NextLogo"} width={100} height={100}></Image>
+                <Image src={"/logoBiton.png"} alt={"BitonDevLogo"} width={175} height={100}></Image>
             </div>
             <div className="flex flex-row flex-nowrap items-center">
-                <Link className="pr-6 font-medium" href='/articles'>Home</Link>
+                <Link className="pr-6 font-medium" href='/'>Home</Link>
 
                 <Link className="pr-6 font-medium" href='/articles'>Articles</Link>
 

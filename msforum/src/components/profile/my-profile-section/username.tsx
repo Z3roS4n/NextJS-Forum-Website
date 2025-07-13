@@ -31,7 +31,7 @@ const ProfileUsername = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUsername(e?.target.value)}
                 />
                 <button type="button"
-                        className="text-center bg-blue-600 pr-4 pl-4 rounded-tr-xl rounded-br-xl text-white hover:bg-blue-700 transition-colors delay-150"
+                        className="btn-primary input-attached w-1/5"
                         onClick={handleUsernameChange}>
                     Save
                 </button>

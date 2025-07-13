@@ -193,7 +193,7 @@
   }
 
   .btn-primary {
-    @apply bg-blue-600 p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
+    @apply bg-[#2E3192] p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
   }
 
   .input-attached {
@@ -205,6 +205,6 @@
   }
 
     .btn-danger {
-    @apply bg-red-600 p-2 m-2 rounded-2xl text-white inline-block hover:bg-red-800 transition-colors duration-150;
+    @apply bg-[#F76C6C] p-2 m-2 rounded-2xl text-white inline-block hover:bg-red-800 transition-colors duration-150;
   }
 }
