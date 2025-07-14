@@ -43,12 +43,12 @@ const MyProfileSection = (props: Props) => {
         <>
             <div id={props.section.sectionId} className="flex flex-col">
                 <h2 className="font-bold text-xl">{props.section.name}</h2>
-                <div className={selectedSection("informations")}>
-                    <div className="flex lg:flex-row flex-col lg:justify-around lg:items-center "  id="profile-image">
-                        <div className="not-lg:flex not-lg:justify-center">
-                            <Image className="rounded-full m-6 w-1/2 lg:w-1/1" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
-                        </div>
-                        <div id="profile-info" className="flex flex-col lg:m-6 text-md lg:w-1/2">
+                <div className={selectedSection("informations") + " flex lg:flex-row flex-col justify-between "}>
+                    <div className="flex lg:flex-row flex-col lg:w-1/3"  id="profile-image">
+                        <div id="profile-info" className="flex flex-col lg:m-6 text-md lg:w-1/1">
+                            <div className="flex justify-center">
+                                <Image className="rounded-full m-6 w-2/3" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
+                            </div>
 
                             {/* USERNAME */}
                             <ProfileUsername></ProfileUsername>
@@ -57,7 +57,7 @@ const MyProfileSection = (props: Props) => {
                             <ProfileEmail></ProfileEmail>
                         </div>
                     </div>
-                    <div id="articles" className="flex flex-col mt-6 w-1/1">
+                    <div id="articles" className="flex flex-col mt-6 lg:w-1/2">
                         {/* ARTICLES */}
                         <ProfileArticles userId={user?.id ?? ""}></ProfileArticles>
                     </div>

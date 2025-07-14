@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
                 content: true,
                 reply_to: true,
                 datetime: true,
+                upvotes: true,
                 author: {
                     select: {
                         user_id: true,
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
                     content: request.content,
                     idart: request.idart,
                     reply_to: null,
-                    datetime: request.datetime
+                    datetime: request.datetime,
                 }
             })
             return NextResponse.json(prisma_insert);

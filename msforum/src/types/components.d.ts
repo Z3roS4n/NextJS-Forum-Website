@@ -40,6 +40,7 @@ export interface Comment_Author_Subscription {
     idart: number;
     user_id: string;
     reply_to: number;
+    upvotes: number;
     author: Author_Subscription;
     datetime: string;
 }

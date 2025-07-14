@@ -36,12 +36,11 @@ const MyProfile = () => {
     }
 
     return (
-        <div id="userProfile" className="flex lg:flex-row flex-col justify-around">
+        <div id="userProfile" className="flex lg:flex-col flex-col justify-around gap-2">
             { isLoaded ? (
                 <>
-                <div id="userProfileSideBar" className="ml-10 mr-10 mt-6 lg:ml-48 lg:mt-10 p-6 border-2 rounded-2xl lg:w-1/5 lg:h-150">
-                    <h2 className="font-bold text-xl">{user?.username}</h2>
-                    <div className="flex lg:flex-col justify-between flex-row pt-2">
+                <div id="userProfileSideBar" className="rounded-2xl flex flex-row items-center">
+                    <div className="flex justify-between flex-row gap-2">
                         {
                             sections.map((sec) => (
                                 <div key={sec.id}>
@@ -56,7 +55,7 @@ const MyProfile = () => {
                         }
                     </div>
                 </div>
-                <div id="userProfileSection" className="ml-10 mr-10 lg:mr-48 mt-10 lg:mt-10 p-6 border-2 rounded-2xl lg:w-3/4 overflow-y-scroll overflow-x-hidden lg:max-h-150 max-h-220">
+                <div id="userProfileSection" className="section-container max-h-220">
                     <MyProfileSection
                         section={
                             (() => {

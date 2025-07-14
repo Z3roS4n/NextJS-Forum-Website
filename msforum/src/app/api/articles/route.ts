@@ -55,6 +55,7 @@ export async function GET(req: NextRequest) {
                     author: {
                         select: {
                             user_id: true,
+                            username: true,
                             email: true
                         }
                     }

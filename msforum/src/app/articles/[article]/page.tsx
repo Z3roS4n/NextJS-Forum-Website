@@ -22,11 +22,11 @@ const ArticlePage = async ({ params }: ArticlePageProps) => {
 
     return (
         <>
-            <div className="m-10 flex flex-col gap-2">
-                <div>
+            <div className="page-container gap-2">
+                <div className="flex flex-col">
                     <h1 className="title">{artData.title}</h1>
                     <p>Category: {artData.category?.name ?? "No Category"}</p>
-                    <p>Published by <Link href={`/profile/${artData.author?.user_id}`}>{artData.author?.user_id}</Link></p>
+                    <p>Published by <Link href={`/profile/${artData.author?.user_id}`}>{artData.author?.username}</Link></p>
                 </div>
 
                 {/* Insert markdown viewer here. */}

@@ -5,7 +5,7 @@ import MyProfile from "@/components/profile/my-profile";
 
 const ProfilePage = () => {
     return (
-        <div>
+        <div className="page-container">
             <SignedIn>
                 <MyProfile></MyProfile>
             </SignedIn>

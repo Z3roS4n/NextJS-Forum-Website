@@ -56,7 +56,7 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
     }
 
     return (
-        <div className="border-2 rounded-2xl p-4 w-1/2 flex flex-col gap-2">
+        <div className="border-2 rounded-2xl p-4 lg:w-1/2 w-1/1 flex flex-col gap-2">
             <label className="font-bold text-lg" htmlFor="leaveComment">Leave a Comment</label>
             <textarea className="border-1 rounded-xl p-2" id="leaveComment" value={comment} rows={4} onChange={(e) => setComment(e.target.value)}/>
             <button className="btn-primary lg:w-1/4" onClick={() => addComment(comment)}>Submit Comment</button>

@@ -188,12 +188,32 @@
     letter-spacing: var(--tracking-normal);
   }
 
+  .page-container {
+    @apply lg:ml-20 ml-8 lg:mr-20 mr-8 lg:mt-6 flex flex-col;
+  }
+
+  .section-container {
+    @apply p-6 border-2 rounded-2xl overflow-y-auto overflow-x-hidden;
+  }
+
+  .article-container {
+    @apply flex flex-row justify-between mt-2 p-2 border-1 rounded-xl;
+  }
+
   .title {
     @apply font-bold text-2xl;
   }
 
   .btn-primary {
-    @apply bg-[#2E3192] p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-blue-700 transition-colors duration-150;
+    @apply flex flex-row items-center bg-[#2E3192] p-2 not-[.input-attached]:rounded-2xl text-white hover:text-[#2E3192] inline-block hover:bg-[#D4E2FF] transition-colors duration-150;
+  }
+
+  .btn-secondary {
+    @apply flex flex-row items-center bg-[#D4E2FF] p-2 not-[.input-attached]:rounded-2xl text-[#2E3192] inline-block hover:bg-[#2E3192] hover:text-white transition-colors duration-150;
+  }
+
+  .btn-danger {
+    @apply flex flex-row items-center bg-[#F76C6C] p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-red-700 transition-colors duration-150;
   }
 
   .input-attached {
@@ -202,9 +222,5 @@
 
   .button-attached {
     @apply rounded-tl-2xl rounded-bl-2xl;
-  }
-
-    .btn-danger {
-    @apply bg-[#F76C6C] p-2 m-2 rounded-2xl text-white inline-block hover:bg-red-800 transition-colors duration-150;
   }
 }

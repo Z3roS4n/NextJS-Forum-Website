@@ -39,6 +39,7 @@ model Comment {
   idart     Int
   user_id   String
   reply_to  Int?
+  upvotes   Int      @default(0)
   datetime  DateTime @default(now())
 
   article   Article  @relation(fields: [idart], references: [idart])

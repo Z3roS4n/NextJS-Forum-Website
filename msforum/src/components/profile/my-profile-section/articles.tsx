@@ -36,14 +36,14 @@ const ProfileArticles = ({ userId }: ProfileArticlesProps) => {
             <h2 className="font-bold text-xl">Articles</h2>
             <div className="flex flex-col">
                 {articles.map((article) =>
-                    <div key={article.idart} className="flex flex-row justify-between mt-2 p-2 border-2 rounded-xl" id={article.idart?.toString()}>
+                    <div key={article.idart} className="article-container" id={article.idart?.toString()}>
                         <div className="overflow-hidden text-ellipsis">
                             <h3 className="font-bold">{article.title}</h3>
-                            <p>{article.content.trim().substring(0, 128)}</p>
+                            <p>{`${article.content.trim().substring(0, 34)}... Open to see more!`}</p>
                         </div>
-                        <div>
-                            <button className="btn-danger" onClick={() => article.idart !== null && deleteArticle(article.idart)}>Delete</button>
-                            <a className="btn-primary" href={`/articles/${article.idart}`}>Go To Article</a>
+                        <div className="flex flex-row flex-nowrap not-lg:flex-wrap gap-2">
+                            <button className="btn-danger not-lg:w-1/1" onClick={() => article.idart !== null && deleteArticle(article.idart)}>Delete</button>
+                            <a className="btn-primary not-lg:w-1/1" href={`/articles/${article.idart}`}>Go To Article</a>
                         </div>
                     </div>
                 )}

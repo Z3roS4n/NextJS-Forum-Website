@@ -10,7 +10,7 @@ const ArticlesPage = async () => {
 
     return (
         <>
-            <div className="ml-12 mr-12 mt-6">
+            <div className="page-container">
                 <div>
                     <h1 className="title">Articles</h1>
                     <p>Here you can search through all published articles on this site!</p>
