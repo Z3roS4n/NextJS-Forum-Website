@@ -10,30 +10,10 @@ export async function GET(req: NextRequest) {
         const idart = searchParams.get("idart");
         const idartParsed = idart ? Number(idart) : undefined;
 
+        const recordsLimit = searchParams.get("limit") || null;
         let retrieveArticle;
 
-        if(searchParams.size == 0)
-            retrieveArticle = await prisma.article.findMany({
-                select: {
-                    idart: true,
-                    idcat: true,
-                    title: true,
-                    content: true,
-                    user_id: true,
-                    datetime: true,
-                    category: {
-                        select: {
-                            idcat: true,
-                            name: true,
-                            description: true
-                        }, 
-                    },
-                },
-                orderBy: [
-                    { datetime:  'desc' }
-                ]
-            });
-        else if(idart)
+        if(idart) 
             retrieveArticle = await prisma.article.findMany({
                 where: {
                     idart: idartParsed,
@@ -60,6 +40,26 @@ export async function GET(req: NextRequest) {
                         }
                     }
                 }
+            });
+        else
+            retrieveArticle = await prisma.article.findMany({
+                select: {
+                    idart: true,
+                    idcat: true,
+                    title: true,
+                    content: true,
+                    user_id: true,
+                    datetime: true,
+                    category: {
+                        select: {
+                            idcat: true,
+                            name: true,
+                            description: true,
+                        },
+                    },
+                },
+                orderBy: [{ datetime: 'desc' }],
+                take: recordsLimit ? parseInt(recordsLimit, 10) : undefined,
             });
 
         return NextResponse.json(retrieveArticle)

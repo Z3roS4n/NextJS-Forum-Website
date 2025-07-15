@@ -43,7 +43,7 @@ const CommentHandler = ( { comments }: Params ) => {
                 // if logged: "Username" has to be "You" and have another border/shadown color
                 <div className={"border-2 rounded-2xl p-4 lg:w-1/2 w-1/1 overflow-hidden self-start"} key={index}>
                     <Link href={!checkLogged(comment.author.user_id) ? `/profile/${comment.user_id}` : "/profile"} className="font-bold text-lg text-ellipsis">{!checkLogged(comment.author.user_id) ? comment.author?.username ?? comment.author.user_id : "You"} - {comment.author?.subscription?.name ?? "Starter User"}</Link>
-                    <p>{comment.datetime}</p>
+                    <p>{new Date(comment.datetime).toISOString().split("T")[1] || 'N/A'}</p>
                     <p>{comment.content}</p>
                     <div className="flex flex-row gap-2">
                         <p>Upvote (21)</p>

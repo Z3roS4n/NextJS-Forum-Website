@@ -14,7 +14,7 @@ export interface Article_Category_Author {
     user_id: string;
     title: string;
     content: string;
-    datetime: number | null;
+    datetime: string | null;
     category: Category;
     author: Author;
 }
@@ -48,7 +48,7 @@ export interface Comment_Author_Subscription {
 export interface User_Subscription {
     user_id: string;
     email: string;
-    subscription: Subscription;
+    subscription: Subscription | null;
 }
 
 export interface Author {
@@ -61,7 +61,7 @@ export interface Author_Subscription {
     user_id: string;
     email: string;
     username: string;
-    subscription: Subscription;
+    subscription: Subscription | null;
 }
 
 export interface Subscription {

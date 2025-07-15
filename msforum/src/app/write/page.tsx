@@ -3,8 +3,12 @@ import { Category } from "@/types/components";
 import { SignedIn } from "@clerk/nextjs";
 
 const WriteArticle = async () => {
-    const req_articleCategories = await fetch('http://localhost:3000/api/manageArticle?action=getExistingCategories', { cache: 'no-store' });
+    const req_articleCategories = await fetch(
+        `${process.env.LOCAL_URL}/api/manageArticle?action=getExistingCategories`,
+        { cache: 'no-store' }
+    );
     const categories: Category[] = await req_articleCategories.json();
+
 
     return (
         <SignedIn>

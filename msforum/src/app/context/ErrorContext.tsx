@@ -1,6 +1,6 @@
 "use client"; // Se sei in app/ directory (Next.js 13+)
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import ErrorPopup from "@/components/ui/error_popup"; // o il tuo path
 
 interface ErrorContextType {
@@ -28,6 +28,16 @@ export const ErrorProvider = ({ children }: { children: ReactNode }) => {
         setError(null);
         setTitle("");
     };
+
+    useEffect(() => {
+        if (!error) return;
+
+        const timeout = setTimeout(() => {
+        closeError();
+        }, 2000); // chiude dopo 2 secondi
+
+        return () => clearTimeout(timeout); // pulizia se cambia prima
+    }, [error]);
 
     return (
         <ErrorContext.Provider value={{ showError }}>

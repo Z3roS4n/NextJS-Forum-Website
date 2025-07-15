@@ -27,13 +27,13 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
             reply_to: null
         }
 
-        const request = await fetch("http://localhost:3000/api/comments", { 
-            method: "POST", 
-            cache: "no-store", 
+        const request = await fetch(`${process.env.LOCAL_URL}/api/comments`, {
+            method: "POST",
+            cache: "no-store",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify(body) 
+            body: JSON.stringify(body),
         });
 
         const response: PostCommentResponse = (await request.json());
@@ -49,7 +49,7 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
             return showError("The minimum characters length in a comment is set to 1 character.", "Comment's too short!");
         
         setComment("");
-        showError("Your comment has been submit!")
+        showError("Your comment has been submit!", "Success!")
         const response: PostCommentResponse = await submitComment(content);
         if(response)
             onSubmit(response)

@@ -2,11 +2,17 @@ import ArticlesComponent from "@/components/articles/articlesComponent"
 import { Article_Category, Category } from "@/types/components";
 
 const ArticlesPage = async () => {
-    const req = await fetch("http://localhost:3000/api/articles", { method: 'GET' });
-    const articles: Article_Category[] = await req.json()
+    const [articlesRes, categoriesRes] = await Promise.all([
+        fetch(`${process.env.LOCAL_URL}/api/articles`, {
+            next: { revalidate: 30 },
+        }),
+        fetch(`${process.env.LOCAL_URL}/api/manageArticle?action=getExistingCategories`, {
+            next: { revalidate: 120 },
+        }),
+    ]);
+    const articles: Article_Category[] = await articlesRes.json();
+    const categories: Category[] = await categoriesRes.json();
 
-    const req_cat = await fetch("http://localhost:3000/api/manageArticle?action=getExistingCategories", { method: 'GET' });
-    const categories: Category[] = await req_cat.json();
 
     return (
         <>

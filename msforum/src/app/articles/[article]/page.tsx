@@ -13,11 +13,16 @@ interface ArticlePageProps {
 const ArticlePage = async ({ params }: ArticlePageProps) => {
     const { article } = await params;
 
-    const article_req = await fetch(`http://localhost:3000/api/articles?idart=${article}`);
+    const [article_req, comments_req] = await Promise.all([
+        fetch(`${process.env.LOCAL_URL || ''}/api/articles?idart=${article}`, {
+            next: { revalidate: 120 } 
+        }),
+        fetch(`${process.env.LOCAL_URL || ''}/api/comments?idart=${article}`, {
+            cache: 'no-store'
+        })
+    ]);
     const art_res_json: Article_Category_Author[] = await article_req.json();
     const artData: Article_Category_Author = art_res_json[0];
-
-    const comments_req = await fetch(`http://localhost:3000/api/comments?idart=${article}`, { cache: 'no-store'});
     const comm_res_json: Comment_Author_Subscription[] = await comments_req.json();
 
     return (
@@ -29,7 +34,7 @@ const ArticlePage = async ({ params }: ArticlePageProps) => {
                     <p>Published by <Link href={`/profile/${artData.author?.user_id}`}>{artData.author?.username}</Link></p>
                 </div>
 
-                {/* Insert markdown viewer here. */}
+                {/* Markdown viewer. */}
                 <ArticleViewer article={artData}></ArticleViewer>
 
                 {/* Comment Section (Another component, must be client side, as an interactive panel) */}

@@ -26,7 +26,7 @@ const MyProfileSection = (props: Props) => {
 
     useEffect(() => {
         const fetchUserInfo = async () => {
-            const res = await fetch("http://localhost:3000/api/user", { 
+            const res = await fetch("/api/user", { 
                 cache: 'no-store', 
                 method: 'POST', 
                 headers: { 'Content-Type': 'application/json' }
