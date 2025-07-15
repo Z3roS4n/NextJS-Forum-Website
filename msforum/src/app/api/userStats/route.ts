@@ -6,13 +6,14 @@ import { UserStatsFunctionResponse } from "@/types/api";
 export async function GET(req: NextRequest) {
     try {
         const user = await currentUser();
-    if (!user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const { searchParams } = new URL(req.url);
+        const userId = searchParams.get("user_id") || user.id;
 
-        const prisma_fetch = await userStats(user.id);
+        const prisma_fetch = await userStats(userId);
 
         return NextResponse.json(prisma_fetch)
     } catch (error) {
@@ -22,7 +23,6 @@ export async function GET(req: NextRequest) {
 }
 
 const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => {
-    // User Data
     const userInfo = await prisma.userdata.findUnique({
         where: { user_id: userId },
         select: {
@@ -36,6 +36,17 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
                     description: true,
                 },
             },
+            _count: {
+                select: {
+                    articles: true,
+                    comments: true,
+                },
+            },
+            comments: {
+                select: {
+                    upvotes: true,
+                },
+            },
         },
     });
 
@@ -43,29 +54,20 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
         throw new Error("User data not found");
     }
 
-    // Articles Count
-    const articleCount = await prisma.article.count({
-        where: { user_id: userId },
-    });
-
-    // Comments Count
-    const commentCount = await prisma.comment.count({
-        where: { user_id: userId },
-    });
-
-    // Total Upvotes
-    const upvoteSum = await prisma.comment.aggregate({
-        where: { user_id: userId },
-        _sum: {
-            upvotes: true,
-        },
-    });
+    const totalUpvotesReceived = userInfo.comments.reduce(
+        (sum, c) => sum + (c.upvotes ?? 0),
+        0
+    );
 
     return {
-        user: userInfo,
-        articlesPublished: articleCount,
-        commentsWritten: commentCount,
-        totalUpvotesReceived: upvoteSum._sum.upvotes ?? 0,
+        user: {
+            user_id: userInfo.user_id,
+            username: userInfo.username,
+            email: userInfo.email,
+            subscription: userInfo.subscription,
+        },
+        articlesPublished: userInfo._count.articles,
+        commentsWritten: userInfo._count.comments,
+        totalUpvotesReceived,
     };
 };
-

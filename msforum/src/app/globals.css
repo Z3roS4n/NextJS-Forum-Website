@@ -204,12 +204,16 @@
     @apply font-bold text-2xl;
   }
 
+  .link-primary {
+    @apply mt-2 sm:mt-0 inline-block text-sm text-[#2E3192] hover:text-[#D4E2FF] font-semibold transition-colors duration-150;
+  }
+
   .btn-primary {
-    @apply flex flex-row items-center bg-[#2E3192] p-2 not-[.input-attached]:rounded-2xl text-white hover:text-[#2E3192] inline-block hover:bg-[#D4E2FF] transition-colors duration-150;
+    @apply flex flex-row items-center bg-[#2E3192] p-2 not-[.input-attached]:rounded-2xl text-white hover:text-[#2E3192] inline-block hover:bg-[#D4E2FF] transition-colors duration-150 shadow-lg;
   }
 
   .btn-secondary {
-    @apply flex flex-row items-center bg-[#D4E2FF] p-2 not-[.input-attached]:rounded-2xl text-[#2E3192] inline-block hover:bg-[#2E3192] hover:text-white transition-colors duration-150;
+    @apply flex flex-row items-center bg-[#D4E2FF] p-2 not-[.input-attached]:rounded-2xl text-[#2E3192] inline-block hover:bg-[#2E3192] hover:text-white transition-colors duration-150 shadow-md;
   }
 
   .btn-danger {

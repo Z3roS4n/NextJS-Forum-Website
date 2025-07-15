@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import RecentArticles from "@/components/home/recentArticles";
 import YourProfile from "@/components/home/yourProfile";
+import FamousUsers from "@/components/home/famousUsers";
 
 export default function Home() {
     const fetch_articles = fetch;
@@ -56,11 +57,7 @@ export default function Home() {
                             </div> 
                         </div>
                         <div> {/* TOP USERS COMPONENT (LIMITED TO 5) */}
-                            <div className="article-container">something happens here...</div>
-                            <div className="article-container">something happens here...</div>
-                            <div className="article-container">something happens here...</div>
-                            <div className="article-container">something happens here...</div>
-                            <div className="article-container">something happens here...</div>
+                            <FamousUsers limit={5}/>
                         </div>
 
                     </div>

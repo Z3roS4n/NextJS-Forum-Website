@@ -27,7 +27,7 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
             reply_to: null
         }
 
-        const request = await fetch(`${process.env.LOCAL_URL}/api/comments`, {
+        const request = await fetch(`/api/comments`, {
             method: "POST",
             cache: "no-store",
             headers: {

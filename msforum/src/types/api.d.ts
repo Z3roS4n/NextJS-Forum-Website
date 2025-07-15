@@ -23,3 +23,27 @@ export interface UserStatsFunctionResponse {
     commentsWritten: number;
     totalUpvotesReceived: number;
 }
+
+export interface TopUsersResponse {
+    byUpvotes: TopUserByUpvotes[];
+    byArticles: TopUserByArticles[];
+    byComments: TopUserByComments[];
+}
+
+export interface TopUserBaseResponse {
+    user_id: string;
+    username: string;
+    email: string;
+}
+
+export interface TopUserByUpvotes extends TopUserBaseResponse {
+    totalUpvotes: number;
+}
+
+export interface TopUserByArticles extends TopUserBaseResponse {
+    articlesCount: number;
+}
+
+export interface TopUserByComments extends TopUserBaseResponse {
+    commentsCount: number;
+}
