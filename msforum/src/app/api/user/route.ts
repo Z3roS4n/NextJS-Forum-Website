@@ -1,14 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const user = await currentUser();
+        const body = await req.json();
 
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
+        const user = {
+            id: body?.id,
+        };
 
         const userInfo = await prisma.userdata.findUnique({
             where: {
@@ -16,14 +15,19 @@ export async function POST(req: NextRequest) {
             },
             select: {
                 user_id: true,
+                username: true,
                 email: true,
+                bio: true,
+                readme: true,
+                profile_picture: true,
                 subscription: {
                     select: {
                         idsub: true,
                         name: true,
+                        description: true,
                     },
                 },
-                articles: {
+                /*articles: {
                     select: {
                         idart: true,
                         content: true,
@@ -33,7 +37,7 @@ export async function POST(req: NextRequest) {
                             },
                         },
                     },
-                },
+                },*/
             },
         });
 

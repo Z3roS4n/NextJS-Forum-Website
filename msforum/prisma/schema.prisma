@@ -77,6 +77,9 @@ model Userdata {
   email          String
   username       String @unique
   idsub          Int?
+  bio            String? @db.VarChar(256)
+  readme         String? @db.VarChar(1024)
+  profile_picture String?
 
   subscription   Subscriptions? @relation(fields: [idsub], references: [idsub])
   articles       Article[]

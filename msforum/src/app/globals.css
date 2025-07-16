@@ -220,6 +220,10 @@
     @apply flex flex-row items-center bg-[#F76C6C] p-2 not-[.input-attached]:rounded-2xl text-white inline-block hover:bg-red-700 transition-colors duration-150;
   }
 
+  .input {
+    @apply not-[.button-attached]:rounded-2xl border-2 p-2;
+  }
+
   .input-attached {
     @apply rounded-tr-2xl rounded-br-2xl;
   }

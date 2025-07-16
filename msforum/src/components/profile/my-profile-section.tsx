@@ -1,65 +1,58 @@
-"use client"
-
-import { prisma } from "@/lib/prisma";
-import { SignedIn, SignedOut, useUser, useReverification } from "@clerk/nextjs";
-import { isClerkRuntimeError, isReverificationCancelledError } from "@clerk/nextjs/errors"
-import { use, useState, useEffect, cache } from "react";
+//import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 
 import ProfileUsername from "./my-profile-section/username";
 import ProfileEmail from "./my-profile-section/email";
 import ProfileArticles from "./my-profile-section/articles";
 
-import { User_Subscription } from "@/types/components";
+import { Author_Subscription } from "@/types/components";
 import SecurityPassword from "./security-section/password";
+import MyProfileBio from "./my-profile-section/bio";
 
-interface Props {
+interface MyProfileSectionParams {
+    userInfo: Author_Subscription;
     section: {
-        sectionId: string,
-        name: string
+        sectionId: string;
+        name: string;
     }
 }
 
-const MyProfileSection = (props: Props) => {
-    const { isSignedIn, isLoaded, user } = useUser();
-    const [userInfo, setUserInfo] = useState<User_Subscription>();
+const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
+    const user = userInfo;
+    if(!user?.user_id)
+        return <><div>Please, log in.</div></>
 
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            const res = await fetch("/api/user", { 
-                cache: 'no-store', 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }
-            });
-            const data = await res.json();
-            setUserInfo(data);
-        };
-        fetchUserInfo();
-    }, []);
-
-    const selectedSection = (currentSection: string) => props.section.sectionId != currentSection ? "hidden" : "";
+    const selectedSection = (currentSection: string) => section.sectionId != currentSection ? "hidden" : "";
 
     return (
         <>
-            <div id={props.section.sectionId} className="flex flex-col">
-                <h2 className="font-bold text-xl">{props.section.name}</h2>
-                <div className={selectedSection("informations") + " flex lg:flex-row flex-col justify-between "}>
-                    <div className="flex lg:flex-row flex-col lg:w-1/3"  id="profile-image">
-                        <div id="profile-info" className="flex flex-col lg:m-6 text-md lg:w-1/1">
+            <div id={section.sectionId} className="flex flex-col">
+                <h2 className="font-bold text-xl">{section.name}</h2>
+                <div className={selectedSection("informations") + " flex flex-row justify-between flex-wrap w-1/1"}>
+                    <div className="flex lg:flex-row flex-col lg:w-1/1"  id="profile-image">
+                        <div id="profile-info" className="flex lg:flex-row flex-col lg:m-6 text-md lg:w-1/1 lg:items-center">
                             <div className="flex justify-center">
-                                <Image className="rounded-full m-6 w-2/3" src={ user?.imageUrl || "" } alt="Profile Image" width={150} height={150} />
+                                <Image className="rounded-full m-6 w-2/3" src={ userInfo.profile_picture ?? "" } alt="Profile Image" width={150} height={150} />
                             </div>
 
-                            {/* USERNAME */}
-                            <ProfileUsername></ProfileUsername>
+                            <div>
+                                {/* USERNAME */}
+                                <ProfileUsername></ProfileUsername>
 
-                            {/* EMAIL */}
-                            <ProfileEmail></ProfileEmail>
+                                {/* EMAIL */}
+                                <ProfileEmail email={userInfo.email}></ProfileEmail>      
+                            </div>
+
+                            <div>
+                                <MyProfileBio user_bio={userInfo.bio}/>
+                            </div>
+
                         </div>
                     </div>
-                    <div id="articles" className="flex flex-col mt-6 lg:w-1/2">
+                    <div id="articles_readme" className="flex flex-col w-1/1 mt-6">
+                        Something,..
                         {/* ARTICLES */}
-                        <ProfileArticles userId={user?.id ?? ""}></ProfileArticles>
+                        <ProfileArticles userId={user?.user_id ?? ""}></ProfileArticles>
                     </div>
                 </div>
 

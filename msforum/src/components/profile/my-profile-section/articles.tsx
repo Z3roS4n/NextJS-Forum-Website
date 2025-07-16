@@ -1,3 +1,5 @@
+"use client"
+
 import { Article } from "@/types/components";
 import { useEffect, useState } from "react";
 
@@ -36,14 +38,14 @@ const ProfileArticles = ({ userId }: ProfileArticlesProps) => {
             <h2 className="font-bold text-xl">Articles</h2>
             <div className="flex flex-col">
                 {articles.map((article) =>
-                    <div key={article.idart} className="article-container" id={article.idart?.toString()}>
+                    <div key={article.idart} className="article-container gap-4" id={article.idart?.toString()}>
                         <div className="overflow-hidden text-ellipsis">
                             <h3 className="font-bold">{article.title}</h3>
                             <p>{`${article.content.trim().substring(0, 34)}... Open to see more!`}</p>
                         </div>
                         <div className="flex flex-row flex-nowrap not-lg:flex-wrap gap-2">
                             <button className="btn-danger not-lg:w-1/1" onClick={() => article.idart !== null && deleteArticle(article.idart)}>Delete</button>
-                            <a className="btn-primary not-lg:w-1/1" href={`/articles/${article.idart}`}>Go To Article</a>
+                            <a className="btn-primary flex not-lg:w-1/1 justify-center items-center text-center" href={`/articles/${article.idart}`}>Go To Article</a>
                         </div>
                     </div>
                 )}

@@ -48,6 +48,9 @@ export interface Comment_Author_Subscription {
 export interface User_Subscription {
     user_id: string;
     email: string;
+    bio: string;
+    readme: string;
+    profile_picture: string | null;
     subscription: Subscription | null;
 }
 
@@ -55,12 +58,12 @@ export interface Author {
     user_id: string;
     email: string;
     username: string;
+    bio: string;
+    readme: string;
+    profile_picture: string | null;
 }
 
-export interface Author_Subscription {
-    user_id: string;
-    email: string;
-    username: string;
+export interface Author_Subscription extends Author {
     subscription: Subscription | null;
 }
 
