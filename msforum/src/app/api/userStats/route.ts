@@ -6,12 +6,13 @@ import { UserStatsFunctionResponse } from "@/types/api";
 export async function GET(req: NextRequest) {
     try {
         const user = await currentUser();
-        if (!user) {
-            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        }
 
         const { searchParams } = new URL(req.url);
-        const userId = searchParams.get("user_id") || user.id;
+        const userId = searchParams.get("user_id") || user?.id;
+
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
 
         const prisma_fetch = await userStats(userId);
 
@@ -65,6 +66,9 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
             username: userInfo.username,
             email: userInfo.email,
             subscription: userInfo.subscription,
+            bio: "",
+            readme: "",
+            profile_picture: null
         },
         articlesPublished: userInfo._count.articles,
         commentsWritten: userInfo._count.comments,

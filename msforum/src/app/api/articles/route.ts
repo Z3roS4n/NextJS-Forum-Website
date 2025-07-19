@@ -9,6 +9,7 @@ export async function GET(req: NextRequest) {
         const idcatNumber = category_id ? Number(category_id) : undefined;
         const idart = searchParams.get("idart");
         const idartParsed = idart ? Number(idart) : undefined;
+        const user_id = searchParams.get("user_id");
 
         const recordsLimit = searchParams.get("limit") || null;
         let retrieveArticle;
@@ -40,6 +41,37 @@ export async function GET(req: NextRequest) {
                         }
                     }
                 }
+            });
+        else if(user_id)
+            retrieveArticle = await prisma.article.findMany({
+                where: {
+                    user_id: user_id,
+                },
+                select: {
+                    idart: true,
+                    idcat: true,
+                    title: true,
+                    content: true,
+                    user_id: true,
+                    datetime: true,
+                    category: {
+                        select: {
+                            idcat: true,
+                            name: true,
+                            description: true
+                        }, 
+                    },
+                    author: {
+                        select: {
+                            user_id: true,
+                            username: true,
+                            email: true
+                        }
+                    }
+                },
+                orderBy: [
+                    { datetime: 'desc' }
+                ]
             });
         else
             retrieveArticle = await prisma.article.findMany({

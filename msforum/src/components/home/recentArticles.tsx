@@ -2,17 +2,31 @@
 
 import { Article_Category_Author } from "@/types/components";
 import { useEffect, useState } from "react"
+import { usePathname } from 'next/navigation'
+import ArticleComp from "../articles/articleComponent";
 
 interface RecentArticlesParams {
-    limit: number
+    limit?: number | null,
+    user_id?: string | null
 }
 
-const RecentArticles = ({ limit }: RecentArticlesParams) => {
+const RecentArticles = ({ limit, user_id}: RecentArticlesParams) => {
     const [ articles, setArticles ] = useState<Article_Category_Author[]>();
+
+    const path = usePathname();
+
+    const queryLimit = limit || 5;
+    const userId = user_id || null;
+
+    const queryStringLimit = `${queryLimit ? 'limit=' + queryLimit : ''}`;
+    const queryStringUserId = `${userId ? 'user_id=' + userId : ''}`;
+
+    const query = `${queryLimit || userId ? '?' : ''}${queryStringLimit}${queryStringUserId}`
+
     useEffect(() => {
         const fetchArticle = async () => {
             try {
-                const res = await fetch(`/api/articles?limit=${limit}`, { next: { revalidate: 120 } });
+                const res = await fetch(`/api/articles${query}`, { next: { revalidate: path == '/' ? 120 : 5 } });
                 if (!res.ok) throw new Error('Errore nel fetch');
                 const data: Article_Category_Author[] = await res.json();
                 setArticles(data);
@@ -26,18 +40,7 @@ const RecentArticles = ({ limit }: RecentArticlesParams) => {
 
     return (
         <> 
-            { articles?.map((article, index) =>
-                <div key={index} className={"article-container"}>
-                    <div>
-                        <h2 className="font-bold text-xl overflow-hidden text-ellipsis">{article.title}</h2>
-                        <p>Category: {article.category?.name || "Nessuna categoria"}</p>
-                        <p className="overflow-hidden text-ellipsis text-nowrap">{article.content.substring(0, 64) + "..."}</p>
-                    </div>
-                    <div className="btn-primary self-end">
-                        <a href={`/articles/${article.idart}`}>Read Article</a>
-                    </div>
-                </div>
-            )}
+            <ArticleComp articles={articles || []}></ArticleComp>
         </>
     )
 }

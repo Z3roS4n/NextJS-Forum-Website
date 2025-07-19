@@ -1,17 +1,19 @@
-import { Article_Category_Author } from "@/types/components";
+"use client"
 
-import ReactMarkdown from 'react-markdown';
+import { UserStatsFunctionResponse } from "@/types/api";
+import { Article } from "@/types/components";
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-interface Params {
-    article: Article_Category_Author
+interface UserStatsParams {
+    content: string
 }
 
-const ArticleViewer = ({ article }: Params) => {
-    
+const ReadMeViewer = ({ content }: UserStatsParams) => {
     return (
-        <div className="border-2 p-4 rounded-2xl">
-            <ReactMarkdown 
+        <>
+            <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
                     img: ({ node, ...props }) => 
@@ -24,12 +26,12 @@ const ArticleViewer = ({ article }: Params) => {
                     h2: ({node, ...props}) => <h2 className="text-2xl font-semibold mt-5 mb-3" {...props} />,
                     h3: ({node, ...props}) => <h3 className="text-xl font-medium mt-4 mb-2" {...props} />,
                     p: ({node, ...props}) => <p className="text-base mb-2" {...props} />,
-                    }}
-            >
-                {article.content}
+                }}
+                >
+                {content}
             </ReactMarkdown>
-        </div>
+        </>
     );
 }
 
-export default ArticleViewer;
+export default ReadMeViewer;
