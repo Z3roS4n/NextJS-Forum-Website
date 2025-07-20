@@ -39,7 +39,7 @@ export default async function ProfilesPage({ params }: { params: Promise<{ slug:
                         <div id="user-info" className="flex flex-col items-center justify-center w-1/1 gap-2">
                             <h1 className="title self-start">Informations</h1>
                             <div className="flex flex-row items-start gap-10 mt-4">
-                                <Image className="rounded-full" src={userInfo.profile_picture ?? '/default.jpg'} alt={"profile-image"} width={200} height={200}></Image>
+                                <Image className="rounded-full" src={userInfo.profile_picture ?? '/default-profile-img.png'} alt={"profile-image"} width={200} height={200}></Image>
                             </div>                            
                             <div className="flex flex-col">
                                 <div className="flex flex-col mt-4 justify-center items-center">

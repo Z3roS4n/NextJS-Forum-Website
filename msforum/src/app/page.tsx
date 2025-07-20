@@ -4,7 +4,10 @@ import RecentArticles from "@/components/home/recentArticles";
 import YourProfile from "@/components/home/yourProfile";
 import FamousUsers from "@/components/home/famousUsers";
 
-export default function Home() {
+import { currentUser } from "@clerk/nextjs/server";
+
+export default async function Home() {
+    const user = await currentUser()
     const fetch_articles = fetch;
     const fetch_users = fetch;
     const fetch_profile = fetch;
@@ -38,7 +41,7 @@ export default function Home() {
                                 <p>Something on your profile</p>   
                             </div>   
                             <div className="self-start">
-                                <a className="btn-secondary text-nowrap" href="/profile">Go to Profile</a>
+                                <a className="btn-secondary text-nowrap" href={`${user ? '/profile' : '/sign-in'}`}>{user ? 'Go to Profile' : 'Sign In Profile'}</a>
                             </div> 
                         </div>
                         <div> {/* SOME PROFILE STATS (UPVOTES, ARTICLES, COMMENTS, VIEWS + PROFILE NAME) */}

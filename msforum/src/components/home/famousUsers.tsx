@@ -46,8 +46,8 @@ const FamousUsers = ({ limit }: FamousUsersParams) => {
 
             <div>
                 { scoreboard && scoreboard[orderBy].map((user, index) => (
-                    <div key={index} className="article-container items-center">
-                        <div className="flex flex-col sm:flex-row items-center gap-3">
+                    <div key={index} className="article-container flex-row items-center">
+                        <div className="flex flex-row items-center gap-3">
                             <p className="text-sm font-medium text-gray-800">{user.username}</p>
                             <p className="text-sm text-gray-500">
                             {orderBy === 'byArticles' && 'articlesCount' in user && `${user.articlesCount} articoli`}
@@ -55,10 +55,7 @@ const FamousUsers = ({ limit }: FamousUsersParams) => {
                             {orderBy === 'byComments' && 'commentsCount' in user && `${user.commentsCount} commenti`}
                             </p>
                         </div>
-                        <a
-                            href={`/profile/${user.user_id}`}
-                            className="link-primary"
-                        >
+                        <a href={`/profile/${user.user_id}`} className="link-primary">
                             Visita profilo →
                         </a>
                     </div>
