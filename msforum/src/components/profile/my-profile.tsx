@@ -15,7 +15,6 @@ interface MyProfileParams {
 const MyProfile = ({ userInfo }: MyProfileParams) => {
     const [ section, setSection ] = useState<Section>({ section: "informations" });
 
-
     const sections = [
         {
             id: "informations",
@@ -23,13 +22,18 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
             icon: "fa-solid fa-circle-info"
         },
         {
+            id: "readme",
+            name: "Read Me",
+            icon: "fa-solid fa-book"
+        },
+        {
             id: "security",
             name: "Security",
             icon: "fa-solid fa-shield"
         },
         {
-            id: "badges",
-            name: "Badges",
+            id: "articles",
+            name: "Articles",
             icon: "fa-solid fa-certificate"
         },
     ];
@@ -41,7 +45,7 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
     return (
         <div id="userProfile" className="flex lg:flex-col flex-col justify-around gap-2">
             <div id="userProfileSideBar" className="rounded-2xl flex flex-row items-center">
-                <div className="flex justify-between flex-row gap-2">
+                <div className="article-container not-lg:w-1/1 flex flex-row gap-2">
                     {
                         sections.map((sec) => (
                             <div key={sec.id}>
@@ -56,7 +60,7 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
                     }
                 </div>
             </div>
-            <div id="userProfileSection" className="article-container">
+            <div id="userProfileSection">
                 <MyProfileSection
                     userInfo={userInfo}
                     section={

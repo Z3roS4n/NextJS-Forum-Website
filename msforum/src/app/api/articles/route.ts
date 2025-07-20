@@ -89,6 +89,13 @@ export async function GET(req: NextRequest) {
                             description: true,
                         },
                     },
+                    author: {
+                        select: {
+                            user_id: true,
+                            username: true,
+                            profile_picture: true,
+                        }
+                    }
                 },
                 orderBy: [{ datetime: 'desc' }],
                 take: recordsLimit ? parseInt(recordsLimit, 10) : undefined,

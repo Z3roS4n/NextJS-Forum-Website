@@ -1,13 +1,16 @@
-//import { currentUser } from "@clerk/nextjs/server";
+"use client"
 import Image from "next/image";
 
-import ProfileUsername from "./my-profile-section/username";
-import ProfileEmail from "./my-profile-section/email";
-import ProfileArticles from "./my-profile-section/articles";
-
-import { Author_Subscription } from "@/types/components";
-import SecurityPassword from "./security-section/password";
-import MyProfileBio from "./my-profile-section/bio";
+import { Article_Category_Author, Author_Subscription } from "@/types/components";
+import UserStats from "./other-user/userstats";
+import ReadMeViewer from "./other-user/readmeviewer";
+import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
+import rehypeSanitize from "rehype-sanitize";
+import { useReverification, useUser } from "@clerk/nextjs";
+import { isClerkRuntimeError, isReverificationCancelledError } from "@clerk/nextjs/errors";
+import { Category } from "@/generated/prisma";
+import ArticlesComponent from "../articles/articlesComponent";
 
 interface MyProfileSectionParams {
     userInfo: Author_Subscription;
@@ -17,48 +20,161 @@ interface MyProfileSectionParams {
     }
 }
 
-const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
-    const user = userInfo;
-    if(!user?.user_id)
-        return <><div>Please, log in.</div></>
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-    const selectedSection = (currentSection: string) => section.sectionId != currentSection ? "hidden" : "";
+const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
+    const { user } = useUser();
+    const changeUsername = useReverification((newUsername: string) => user?.update({ username: newUsername }));
+
+    const [RMContent, setRMContent] = useState<string>(userInfo.readme);
+    const [UserBio, setUserBio] = useState<string>(userInfo.bio);
+    const [Username, setUsername] = useState<string>(userInfo.username);
+    const [Articles, setArticles] = useState<Article_Category_Author[]>();
+    const [Categories, setCategories] = useState<Category[]>();
+
+    useEffect(() => {
+        if (!userInfo?.user_id) return;
+
+        const fetchAPIServer = async () => {
+            try {
+                const [fetchArticles, fetchCategories] = await Promise.all([
+                    fetch(`/api/articles?user_id=${userInfo.user_id}`, {
+                        next: { revalidate: 30 },
+                    }),
+                    fetch(`/api/manageArticle?action=getExistingCategories`, {
+                        next: { revalidate: 120 },
+                    }),
+                ]);
+
+                if (!fetchArticles.ok || !fetchCategories.ok) {
+                    throw new Error("Error on data retrieval");
+                }
+
+                const articles = await fetchArticles.json();
+                const categories = await fetchCategories.json();
+
+                setArticles(articles);
+                setCategories(categories);
+            } catch (error) {
+                console.error("Fetch error:", error);
+            }
+        };
+
+        fetchAPIServer();
+    }, [userInfo?.user_id]);
+
+    const handleSaveEdits = async () => {
+        try {
+            
+            if (userInfo.username !== Username) {
+                await changeUsername(Username);
+            }
+            
+            if (userInfo.bio !== UserBio) {
+                
+            }
+        } catch (error) {
+            if (isClerkRuntimeError(error) || isReverificationCancelledError(error)) {
+                console.error('Error updating profile:', error);
+            }
+        }
+    }
+    const selectedSection = (currentSection: string) => section.sectionId == currentSection ? true : false;
+
+    const detectChanges = (): number => {
+        let changes = 0;
+        if(UserBio != userInfo.bio)
+            changes++;
+        if(Username != userInfo.username)
+            changes++;
+
+        return changes;
+    }
 
     return (
         <>
             <div id={section.sectionId} className="flex flex-col">
-                <h2 className="font-bold text-xl">{section.name}</h2>
-                <div className={selectedSection("informations") + " flex flex-row justify-between flex-wrap w-1/1"}>
-                    <div className="flex lg:flex-row flex-col lg:w-1/1"  id="profile-image">
-                        <div id="profile-info" className="flex lg:flex-row flex-col lg:m-6 text-md lg:w-1/1 lg:items-center">
-                            <div className="flex justify-center">
-                                <Image className="rounded-full m-6 w-2/3" src={ userInfo.profile_picture ?? "" } alt="Profile Image" width={150} height={150} />
+                <div className="flex lg:flex-row flex-col lg:gap-2">
+                    <div className="w-1/1">
+                        <div id="user-info" className="flex flex-col items-center justify-center w-1/1 gap-2">
+                            <h1 className="title self-start">{section.name}</h1>
+                            {/* INFORMATIONS SECTION */}
+                            <div hidden={!selectedSection("informations")} className="w-1/1 flex lg:flex-row flex-col gap-2">
+                                <div className="flex flex-col gap-2 lg:w-1/5 w-1/1 article-container">
+                                    <h1 className="font-bold text-xl self-center">Profile Preview</h1>
+                                    <div className="flex flex-row justify-center items-center gap-10 mt-4">
+                                        <Image className="rounded-full" src={userInfo.profile_picture ?? '/default.jpg'} alt={"profile-image"} width={200} height={200}></Image>
+                                    </div>                            
+                                    <div className="flex flex-col justify-center">
+                                        <div className="flex flex-col mt-4 justify-center items-center">
+                                            <span className="block text-gray-500">Username</span>
+                                            <span className="font-medium text-lg">{userInfo.username}</span>
+                                            <span className="block text-gray-500">Subscription</span>
+                                            <span className="font-medium text-lg">{userInfo.subscription?.name ?? "Starter User"}</span>
+                                            <span className="block text-gray-500">Bio</span>
+                                            <span className="font-medium text-lg text-wrap">{userInfo.bio}</span> 
+                                        </div>
+                                    </div>                                
+                                    <div className="flex gap-2">
+                                        <UserStats user_id={userInfo.user_id}></UserStats>
+                                    </div>
+                                </div>
+                                <div className="article-container flex flex-col gap-2 lg:w-2/5 w-1/1">
+                                    <div className="flex flex-col gap-2 w-1/1">
+                                        <div className="flex flex-col w-1/1">
+                                            <label htmlFor="set-username" className="font-bold text-lg">Username</label>
+                                            <input id="set-username" defaultValue={Username} onChange={(e) => setUsername(e.target.value)} className="input lg:w-1/1" maxLength={128}/>
+                                        </div>
+                                        <div className="flex flex-col w-1/1">
+                                            <label htmlFor="set-username" className="font-bold text-lg">Email Address</label>
+                                            <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128}/>
+                                        </div>
+                                        <div className="flex flex-col w-1/1">
+                                            <label htmlFor="set-userbio" className="font-bold text-lg">Your Bio</label>
+                                            <textarea id="set-userbio" defaultValue={UserBio} onChange={(e) => setUserBio(e.target.value)} className="input lg:w-1/1 resize-none h-30" maxLength={128}/>
+                                        </div>   
+                                    </div>
+
+                                    <div className="w-1/1">
+                                        <button onClick={handleSaveEdits} disabled={detectChanges() ? false : true} className="btn-primary lg:w-1/4 w-1/1 disabled:opacity-40 transition-opacity duration-150">Save edits</button>
+                                    </div>
+                                </div>
+                                <div className="article-container flex-col lg:w-2/5 overflow-auto max-h-140">
+                                    <h1 className="font-bold text-xl self-center">Readme Preview</h1>
+                                    <ReadMeViewer content={userInfo.readme}></ReadMeViewer>
+                                </div>
                             </div>
 
-                            <div>
-                                {/* USERNAME */}
-                                <ProfileUsername></ProfileUsername>
-
-                                {/* EMAIL */}
-                                <ProfileEmail email={userInfo.email}></ProfileEmail>      
+                            <div hidden={!selectedSection("readme")} className="w-1/1">
+                                <div className="article-container w-1/1">
+                                    <div className="flex flex-col gap-2 w-1/1">
+                                        <MDEditor
+                                            value={RMContent}
+                                            onChange={(value = "") => setRMContent(value)}
+                                            height={400}
+                                            data-color-mode="light"
+                                            preview="edit"
+                                            previewOptions={{
+                                                rehypePlugins: [rehypeSanitize],
+                                            }}
+                                        />
+                                        <button className="btn-primary">Save edits</button>
+                                    </div>
+                                </div>  
                             </div>
 
-                            <div>
-                                <MyProfileBio user_bio={userInfo.bio}/>
+                            <div hidden={!selectedSection("security")} className="w-1/1">
+                                <div className="article-container w-1/1">
+                                </div>
+                            </div>
+
+                            <div hidden={!selectedSection("articles")} className="w-1/1">
+                                <div className="article-container flex-col gap-2 w-1/1">
+                                    <ArticlesComponent articles={Articles || []} categories={Categories || []} limitIndex={5}/>
+                                </div>
                             </div>
 
                         </div>
-                    </div>
-                    <div id="articles_readme" className="flex flex-col w-1/1 mt-6">
-                        Something,..
-                        {/* ARTICLES */}
-                        <ProfileArticles userId={user?.user_id ?? ""}></ProfileArticles>
-                    </div>
-                </div>
-
-                <div className={selectedSection("security")}>
-                    <div>
-                        <SecurityPassword></SecurityPassword>
                     </div>
                 </div>
             </div>

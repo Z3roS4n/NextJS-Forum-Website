@@ -1,10 +1,8 @@
 "use client"
 
-import { UserStatsFunctionResponse } from "@/types/api";
-import { Article } from "@/types/components";
-import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 
 interface UserStatsParams {
     content: string
@@ -15,11 +13,12 @@ const ReadMeViewer = ({ content }: UserStatsParams) => {
         <>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeSanitize]}
                 components={{
                     img: ({ node, ...props }) => 
                         <img
                             {...props}
-                            className="max-w-xs h-auto mx-auto rounded-md"
+                            className="mt-2 max-w-xs h-auto rounded-md"
                             alt={props.alt || "image"}
                         />,
                     h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-6 mb-4" {...props} />,

@@ -22,7 +22,7 @@ const ProfilePage = async () => {
     return (
         <div className="page-container">
 
-                <MyProfile userInfo={userInfo}></MyProfile>
+            <MyProfile userInfo={userInfo}></MyProfile>
 
         </div>
     )

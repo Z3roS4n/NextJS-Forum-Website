@@ -26,7 +26,7 @@ model Article {
 model Category {
   idcat       Int       @id @default(autoincrement())
   name        String
-  description String?
+  description String
 
   articles    Article[]
 

@@ -69,17 +69,7 @@ export default async function ProfilesPage({ params }: { params: Promise<{ slug:
                 <div className="article-container lg:w-1/1">
                     <div className="w-1/1 flex flex-col gap-2">
                         <h1 className="title">Articles</h1>
-                        <ArticlesComponent articles={articles.map(article => (
-                            {
-                                ...article,
-                                datetime: article.datetime ? new Date(article.datetime).getTime() : null
-                            }
-                        ))} categories={categories.map(category => (
-                            {
-                                ...category,
-                                description: category.description ?? ''
-                            }
-                        ))}/>
+                        <ArticlesComponent articles={articles} categories={categories} limitIndex={5}/>
                     </div>
                 </div>
             </div>

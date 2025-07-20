@@ -1,5 +1,5 @@
 import ArticlesComponent from "@/components/articles/articlesComponent"
-import { Article_Category, Category } from "@/types/components";
+import { Article_Category, Article_Category_Author, Category } from "@/types/components";
 
 const ArticlesPage = async () => {
     const [articlesRes, categoriesRes] = await Promise.all([
@@ -10,7 +10,7 @@ const ArticlesPage = async () => {
             next: { revalidate: 120 },
         }),
     ]);
-    const articles: Article_Category[] = await articlesRes.json();
+    const articles: Article_Category_Author[] = await articlesRes.json();
     const categories: Category[] = await categoriesRes.json();
 
 
@@ -23,7 +23,7 @@ const ArticlesPage = async () => {
                 </div>
                 
                 <div className="flex flex-col gap-4">
-                    <ArticlesComponent articles={articles} categories={categories}></ArticlesComponent>
+                    <ArticlesComponent articles={articles} categories={categories} limitIndex={10}></ArticlesComponent>
                 </div>
             </div>
         </>

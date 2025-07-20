@@ -221,7 +221,7 @@
   }
 
   .input {
-    @apply not-[.button-attached]:rounded-2xl border-2 p-2;
+    @apply not-[.button-attached]:rounded-2xl border-1 p-2 focus:outline-0 hover:shadow-md;
   }
 
   .input-attached {
@@ -231,4 +231,5 @@
   .button-attached {
     @apply rounded-tl-2xl rounded-bl-2xl;
   }
+
 }
