@@ -41,7 +41,7 @@ const CommentHandler = ( { comments }: Params ) => {
             {comments.map((comment, index) =>
                 // Check if comment is written by logged user or not,
                 // if logged: "Username" has to be "You" and have another border/shadown color
-                <div className={"border-2 rounded-2xl p-4 lg:w-1/2 w-1/1 overflow-hidden self-start"} key={index}>
+                <div className={"article-container flex-col lg:w-1/2"} key={index}>
                     <Link href={!checkLogged(comment.author.user_id) ? `/profile/${comment.user_id}` : "/profile"} className="font-bold text-lg text-ellipsis">{!checkLogged(comment.author.user_id) ? comment.author?.username ?? comment.author.user_id : "You"} - {comment.author?.subscription?.name ?? "Starter User"}</Link>
                     <p>{new Date(comment.datetime).toISOString().split("T")[1] || 'N/A'}</p>
                     <p>{comment.content}</p>

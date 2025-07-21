@@ -10,7 +10,7 @@ interface Params {
 const ArticleViewer = ({ article }: Params) => {
     
     return (
-        <div className="border-2 p-4 rounded-2xl">
+        <div className="article-container flex-col justify-start w-1/1">
             <ReactMarkdown 
                 remarkPlugins={[remarkGfm]}
                 components={{

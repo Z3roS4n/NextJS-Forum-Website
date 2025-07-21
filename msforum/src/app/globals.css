@@ -205,7 +205,7 @@
   }
 
   .link-primary {
-    @apply mt-2 sm:mt-0 inline-block text-sm text-[#2E3192] hover:text-[#D4E2FF] font-semibold transition-colors duration-150;
+    @apply mt-2 sm:mt-0 inline-block text-[#2E3192] hover:text-[#D4E2FF] font-semibold transition-colors duration-150;
   }
 
   .btn-primary {

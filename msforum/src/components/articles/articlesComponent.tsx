@@ -3,6 +3,7 @@
 import { Article_Category, Article_Category_Author, Category } from "@/types/components";
 import Link from "next/link";
 import { useState } from "react";
+import SelectComponent from "../ui/select";
 
 interface Params {
     articles: Article_Category_Author[],
@@ -54,27 +55,26 @@ const ArticlesComponent = ({articles, categories, limitIndex = 20}: Params) => {
     return (
         <>
             <div className="flex flex-col lg:flex-row gap-6">
-                <select name="cat" id="cat" title="Category" className="input" defaultValue={0} onChange={(e) => setCategory(Number(e.target.value))}>
-                    <option value="0">All Categories</option>
-                    {categories.map((category, index) => <option key={index} value={category.idcat}>{category.name}</option>)}
-                </select>
+                <SelectComponent categories={categories} onCategorySelection={(categoryId) => setCategory(categoryId)}/>
                 <div>
                     <label htmlFor="titleSearch">Search by Title</label>
                     <input className="input ml-2" type="text" name="search" id="titleSearch" onChange={(e) => setTitle(e.target.value)} />
                 </div>
             </div>
 
-            {articles.map((article: Article_Category_Author, index) => 
-                <div key={article.idart} className={"border-1 rounded-2xl p-2 " + getVisibilityClass(article.idcat ?? 0, article.title, index ?? 0) }>
-                    <h2 className="font-bold text-xl overflow-hidden text-ellipsis">{article.title}</h2>
-                    <p>Author: <Link href={`/profile/${article.author.user_id}`}>{article.author.username}</Link></p>
-                    <p>Category: {article.category?.name || "Nessuna categoria"}</p>
-                    <p className="overflow-hidden text-ellipsis">{article.content}</p>
-                    <div className="btn-primary mt-2">
-                        <a href={`/articles/${article.idart}`}>Read Article</a>
+            <div className="flex flex-col gap-2">
+                {articles.map((article: Article_Category_Author, index) => 
+                    <div key={article.idart} className={"article-container flex-col " + getVisibilityClass(article.idcat ?? 0, article.title, index ?? 0) }>
+                        <h2 className="font-bold text-xl overflow-hidden text-ellipsis">{article.title}</h2>
+                        <p>Author: <Link className="link-primary" href={`/profile/${article.author.user_id}`}>{article.author.username}</Link></p>
+                        <p>Category: {article.category?.name || "Nessuna categoria"}</p>
+                        <p className="overflow-hidden text-ellipsis">{article.content}</p>
+                        <div className="btn-primary mt-2 lg:self-start text-center">
+                            <a href={`/articles/${article.idart}`}>Read Article</a>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
 
             <div className="flex flex-row justify-center items-center">
                 <button className="btn-primary m-2" onClick={() => setPageIndex(pageIndex - 1)} disabled={pageIndex == 1 || pageIndex < 1 ? true : false}>Prev</button>

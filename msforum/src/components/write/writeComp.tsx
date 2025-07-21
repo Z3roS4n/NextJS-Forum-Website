@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { Category, Article } from "@/types/components";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import ReadMeViewer from "../profile/other-user/readmeviewer";
+import SelectComponent from "../ui/select";
 
 // import dinamico per evitare SSR issues con react-md-editor
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -35,6 +37,8 @@ const WriteComp = ({ categories }: Params) => {
             datetime: new Date().getMilliseconds(), // meglio ISO string
         };
 
+        console.log(articleData)
+
         const post_article = await fetch("/api/manageArticle", {
             method: "POST",
             cache: "no-store",
@@ -60,47 +64,34 @@ const WriteComp = ({ categories }: Params) => {
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-1/2xl font-bold">Category</h2>
-                    <select
-                        className="input"
-                        title="Categories"
-                        name="categories"
-                        id="categories"
-                        onChange={(e) => {
-                            setCategory(Number(e.target.value));
-                        }}
-                        value={category}
-                    >
-                        <option value={0}>No Category</option>
-                        {categories?.map((cat: Category, index) => (
-                            <option key={index} value={cat.idcat}>
-                                {cat.name}
-                            </option>
-                        ))}
-                    </select>
+                    <SelectComponent categories={categories} onCategorySelection={(categoryId) => setCategory(categoryId)}/>
                 </div>
             </div>
 
-            <div className="article-container w-1/1">
-                <MDEditor
-                    value={content}
-                    onChange={(value = "") => setContent(value)}
-                    height={400}
-                    data-color-mode="light"
-                    className="w-1/1"
-                />
-            </div>
-
-            <div className="mt-6 flex flex-col items-center">
-                <div className="flex lg:flex-row flex-col justify-center lg:w-1/4 gap-4">
-                    <button onClick={onSubmit} className="btn-primary" type="button">
-                        Submit Article
-                    </button>
-                    {/*
-                        <button className="btn-primary" type="button">
-                            Save in draft
-                        </button>
-                    */}
+            <div className="w-1/1 flex lg:flex-row flex-col gap-2">
+                <div className="article-container lg:w-1/2 w-1/1 flex-col gap-2">
+                    <MDEditor
+                        value={content}
+                        onChange={(value = "") => setContent(value)}
+                        height={400}
+                        preview="edit"
+                        data-color-mode="light"
+                        className="w-1/1"
+                    />
+                        <div className="self-end flex gap-2 not-lg:w-1/1">
+                            <button className="btn-secondary not-lg:w-1/2" type="button">
+                                Save in draft
+                            </button>
+                            <button onClick={onSubmit} className="btn-primary not-lg:w-1/2" type="button">
+                                Submit Article
+                            </button>
+                            
+                        </div>
                 </div>
+                <div className="article-container flex-col lg:w-1/2 w-1/1 overflow-auto max-h-122 justify-start">
+                    <h1 className="font-bold text-xl self-center">Realtime Preview</h1>
+                    <ReadMeViewer content={content}></ReadMeViewer>
+                </div> 
             </div>
         </>
     );

@@ -8,8 +8,8 @@ const NavBar = () => {
     const { isLoaded, isSignedIn, user} = useUser();
 
     return (
-        <nav className="p-6 flex flex-row justify-between">
-            <div>
+        <nav className="p-6 flex flex-row justify-between page-container article-container">
+            <div className="not-lg:hidden">
                 <Image src={"/logoBiton.png"} alt={"BitonDevLogo"} width={175} height={100}></Image>
             </div>
             <div className="flex flex-row flex-nowrap items-center">
