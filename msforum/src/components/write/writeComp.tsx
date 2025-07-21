@@ -48,20 +48,20 @@ const WriteComp = ({ categories }: Params) => {
     return (
         <>
             <div className="flex lg:flex-row flex-col lg:items-center gap-2">
-                <div className="flex flex-col lg:m-2 lg:w-1/3 w-1/1">
+                <div className="flex flex-col lg:w-1/3 w-1/1">
                     <label htmlFor="title" className="text-1/2xl font-bold">Article Title</label>
                     <input
                         id="title"
                         type="text"
                         onChange={(e) => setTitle(e.target.value)}
-                        className="p-2 border-2 rounded-2xl"
+                        className="input"
                         value={title}
                     />
                 </div>
                 <div className="flex flex-col">
                     <h2 className="text-1/2xl font-bold">Category</h2>
                     <select
-                        className="text-1/2xl p-2 border-2 rounded-2xl"
+                        className="input"
                         title="Categories"
                         name="categories"
                         id="categories"
@@ -80,12 +80,13 @@ const WriteComp = ({ categories }: Params) => {
                 </div>
             </div>
 
-            <div className="m-2">
+            <div className="article-container w-1/1">
                 <MDEditor
                     value={content}
                     onChange={(value = "") => setContent(value)}
                     height={400}
                     data-color-mode="light"
+                    className="w-1/1"
                 />
             </div>
 

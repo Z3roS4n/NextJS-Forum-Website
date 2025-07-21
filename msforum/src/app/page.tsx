@@ -8,9 +8,6 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
     const user = await currentUser()
-    const fetch_articles = fetch;
-    const fetch_users = fetch;
-    const fetch_profile = fetch;
 
     return (
         <div className="page-container gap-4">

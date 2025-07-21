@@ -11,6 +11,7 @@ import { useReverification, useUser } from "@clerk/nextjs";
 import { isClerkRuntimeError, isReverificationCancelledError } from "@clerk/nextjs/errors";
 import { Category } from "@/generated/prisma";
 import ArticlesComponent from "../articles/articlesComponent";
+import { useError } from "@/app/context/ErrorContext";
 
 interface MyProfileSectionParams {
     userInfo: Author_Subscription;
@@ -25,12 +26,46 @@ const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
     const { user } = useUser();
     const changeUsername = useReverification((newUsername: string) => user?.update({ username: newUsername }));
-
+    const { showError } = useError();
+    
     const [RMContent, setRMContent] = useState<string>(userInfo.readme);
     const [UserBio, setUserBio] = useState<string>(userInfo.bio);
     const [Username, setUsername] = useState<string>(userInfo.username);
     const [Articles, setArticles] = useState<Article_Category_Author[]>();
     const [Categories, setCategories] = useState<Category[]>();
+
+    const postUserChanges = async (action: string) => {
+        try {
+            if(action == 'set_bio')
+                fetch(`/api/user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        data: {
+                            bio: UserBio,
+                        }
+                    })
+                })
+            if(action == 'set_readme')
+                fetch(`/api/user`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: action,
+                        data: {
+                            readme: RMContent,
+                        }
+                    })
+                })
+        } catch (error) {
+            return showError("There was an unexpected error, retry later.", "Client Error")
+        }
+    }
 
     useEffect(() => {
         if (!userInfo?.user_id) return;
@@ -66,13 +101,18 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
     const handleSaveEdits = async () => {
         try {
             
-            if (userInfo.username !== Username) {
+            if(userInfo.username !== Username) {
                 await changeUsername(Username);
             }
             
-            if (userInfo.bio !== UserBio) {
-                
+            if(userInfo.bio !== UserBio) {
+                await postUserChanges('set_bio');
             }
+
+            if(RMContent != userInfo.readme) {
+                await postUserChanges('set_readme');
+            }
+
         } catch (error) {
             if (isClerkRuntimeError(error) || isReverificationCancelledError(error)) {
                 console.error('Error updating profile:', error);
@@ -86,6 +126,8 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
         if(UserBio != userInfo.bio)
             changes++;
         if(Username != userInfo.username)
+            changes++;
+        if(RMContent != userInfo.readme)
             changes++;
 
         return changes;
@@ -127,7 +169,7 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                         </div>
                                         <div className="flex flex-col w-1/1">
                                             <label htmlFor="set-username" className="font-bold text-lg">Email Address</label>
-                                            <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128}/>
+                                            <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128} readOnly/>
                                         </div>
                                         <div className="flex flex-col w-1/1">
                                             <label htmlFor="set-userbio" className="font-bold text-lg">Your Bio</label>
@@ -136,31 +178,39 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                     </div>
 
                                     <div className="w-1/1">
-                                        <button onClick={handleSaveEdits} disabled={detectChanges() ? false : true} className="btn-primary lg:w-1/4 w-1/1 disabled:opacity-40 transition-opacity duration-150">Save edits</button>
+                                        <button onClick={handleSaveEdits} disabled={detectChanges() ? false : true} className="btn-primary lg:w-1/4 w-1/1 button-disabled">Save edits</button>
                                     </div>
                                 </div>
-                                <div className="article-container flex-col lg:w-2/5 overflow-auto max-h-140">
+                                <div className="article-container flex flex-col lg:w-2/5 overflow-auto max-h-140">
                                     <h1 className="font-bold text-xl self-center">Readme Preview</h1>
                                     <ReadMeViewer content={userInfo.readme}></ReadMeViewer>
                                 </div>
                             </div>
 
-                            <div hidden={!selectedSection("readme")} className="w-1/1">
-                                <div className="article-container w-1/1">
+                            <div hidden={!selectedSection("readme")} className="w-1/1 flex lg:flex-row flex-col gap-2">
+                                <div className="article-container lg:w-3/5">
                                     <div className="flex flex-col gap-2 w-1/1">
                                         <MDEditor
                                             value={RMContent}
                                             onChange={(value = "") => setRMContent(value)}
-                                            height={400}
                                             data-color-mode="light"
                                             preview="edit"
+                                            height={400}
+                                            maxHeight={400}
                                             previewOptions={{
                                                 rehypePlugins: [rehypeSanitize],
                                             }}
                                         />
-                                        <button className="btn-primary">Save edits</button>
+                                        <div className="self-end not-lg:w-1/1">
+                                           <button className="btn-primary not-lg:w-1/1 button-disabled" onClick={handleSaveEdits} disabled={detectChanges() ? false : true}>Save edits</button> 
+                                        </div>
                                     </div>
                                 </div>  
+                                <div className="article-container flex-col lg:w-2/5 overflow-auto max-h-122 justify-start">
+                                    <h1 className="font-bold text-xl self-center">Realtime Preview</h1>
+                                    <ReadMeViewer content={RMContent}></ReadMeViewer>
+                                </div>
+                                
                             </div>
 
                             <div hidden={!selectedSection("security")} className="w-1/1">

@@ -18,7 +18,7 @@ const ReadMeViewer = ({ content }: UserStatsParams) => {
                     img: ({ node, ...props }) => 
                         <img
                             {...props}
-                            className="mt-2 max-w-xs h-auto rounded-md"
+                            className="mt-2 h-auto rounded-md"
                             alt={props.alt || "image"}
                         />,
                     h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-6 mb-4" {...props} />,

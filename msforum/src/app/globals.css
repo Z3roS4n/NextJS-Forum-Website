@@ -232,4 +232,8 @@
     @apply rounded-tl-2xl rounded-bl-2xl;
   }
 
+  .button-disabled {
+    @apply transition-opacity duration-150 disabled:opacity-40;
+  }
+
 }

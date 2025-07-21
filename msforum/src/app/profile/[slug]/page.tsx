@@ -1,4 +1,3 @@
-
 import ArticlesComponent from "@/components/articles/articlesComponent";
 
 import ReadMeViewer from "@/components/profile/other-user/readmeviewer";
@@ -11,13 +10,8 @@ export default async function ProfilesPage({ params }: { params: Promise<{ slug:
     const { slug } = await params;
 
     const [resUser, resArts, resCat] = await Promise.all([
-        fetch(`${process.env.LOCAL_URL}/api/user`, { 
-            method: 'POST', 
+        fetch(`${process.env.LOCAL_URL}/api/user?id=${slug}`, { 
             next: { revalidate: 30 }, 
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id: slug,
-            })
         }),
         fetch(`${process.env.LOCAL_URL}/api/articles?user_id=${slug}`, 
             { next: { revalidate: 30 } }
@@ -58,7 +52,7 @@ export default async function ProfilesPage({ params }: { params: Promise<{ slug:
                         <div id="user-readme"></div>
 
                     </div>
-                    <div className="article-container lg:w-4/5 w-1/1">
+                    <div className="article-container lg:w-4/5 w-1/1 overflow-auto max-h-140">
                         <div>
                             <h1 className="title">Read me</h1>
                             <ReadMeViewer content={userInfo.readme}></ReadMeViewer>

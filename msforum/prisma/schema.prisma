@@ -73,7 +73,6 @@ model Subscriptions {
 
 model Userdata {
   user_id        String        @id
-  subscriptionid Int?
   email          String
   username       String @unique
   idsub          Int?
