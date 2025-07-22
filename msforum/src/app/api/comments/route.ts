@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PrismaPromise } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
-import { PostCommentRequest } from "@/types/api";
+import { PostCommentRequest, UpvoteCommentRequest } from "@/types/api";
 
 export async function GET(req: NextRequest) {
     try {
@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
                 idart: idart,
             },
             select: {
+                idcomment: true,
                 user_id: true,
                 content: true,
                 reply_to: true,
@@ -35,7 +36,9 @@ export async function GET(req: NextRequest) {
             orderBy: [
                 { datetime: 'desc' }
             ]
-        })
+        }) 
+
+        //aggiornare con query per upvotes.
 
         return NextResponse.json(commentsRetrieval);
 
@@ -47,30 +50,43 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     const user = await currentUser();
-    const request: PostCommentRequest = await req.json();
+    const request: PostCommentRequest | UpvoteCommentRequest = await req.json();
 
     try {
         if(!user) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        if(request.reply_to)
-            return NextResponse.json({ error: "Not yet implemented"}, { status: 501 })
-
-        if(!request.reply_to) {
+        if(request.action === 'comment') {
             const prisma_insert = await prisma.comment.createManyAndReturn({
                 data: {
                     user_id: user.id,
-                    content: request.content,
-                    idart: request.idart,
-                    reply_to: null,
-                    datetime: request.datetime,
+                    content: request.data.content,
+                    idart: request.data.idart,
+                    reply_to: request.data.reply_to,
+                    datetime: request.data.datetime,
                 }
             })
             return NextResponse.json(prisma_insert);
         }
+
+        if(request.action === 'upvote') {
+            //aggiornare con query per upvotes
+            const prisma_update = await prisma.comment.update({
+                where: {
+                    idcomment: request.data.idcomment,
+                },
+                data: {
+                    upvotes: {
+                        set: request.data.upvotes,
+                    }
+                }
+            })
+            return NextResponse.json(prisma_update);
+        }
             
     } catch(error) {
+        console.log(error)
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
     }
 }

@@ -9,11 +9,22 @@ export interface PostUserInformations {
     }
 }
 
+export interface UpvoteCommentRequest {
+    action: 'upvote';
+    data: {
+        idcomment: number;
+        upvotes: number;
+    }
+}
+
 export interface PostCommentRequest {
-    content: string;
-    datetime: string;
-    idart: number;
-    reply_to: number | null;
+    action: 'comment';
+    data: {
+        content: string;
+        datetime: string;
+        idart: number;
+        reply_to: number | null;
+    }
 }
 
 export interface PostCommentResponse {

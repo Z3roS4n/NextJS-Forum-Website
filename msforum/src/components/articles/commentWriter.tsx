@@ -21,10 +21,13 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
     const submitComment = async (content: string): Promise<PostCommentResponse> => {
 
         const body: PostCommentRequest = {
-            idart: Number(params.article),
-            content: content,
-            datetime: new Date().toISOString(),
-            reply_to: null
+            action: 'comment',
+            data: {
+                idart: Number(params.article),
+                content: content,
+                datetime: new Date().toISOString(),
+                reply_to: null
+            }
         }
 
         const request = await fetch(`/api/comments`, {
