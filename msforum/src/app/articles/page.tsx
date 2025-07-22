@@ -3,10 +3,10 @@ import { Article_Category, Article_Category_Author, Category } from "@/types/com
 
 const ArticlesPage = async () => {
     const [articlesRes, categoriesRes] = await Promise.all([
-        fetch(`${process.env.LOCAL_URL}/api/articles`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/articles`, {
             next: { revalidate: 30 },
         }),
-        fetch(`${process.env.LOCAL_URL}/api/manageArticle?action=getExistingCategories`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/manageArticle?action=getExistingCategories`, {
             next: { revalidate: 120 },
         }),
     ]);

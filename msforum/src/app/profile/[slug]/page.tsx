@@ -10,13 +10,13 @@ export default async function ProfilesPage({ params }: { params: Promise<{ slug:
     const { slug } = await params;
 
     const [resUser, resArts, resCat] = await Promise.all([
-        fetch(`${process.env.LOCAL_URL}/api/user?id=${slug}`, { 
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user?id=${slug}`, { 
             next: { revalidate: 30 }, 
         }),
-        fetch(`${process.env.LOCAL_URL}/api/articles?user_id=${slug}`, 
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/articles?user_id=${slug}`, 
             { next: { revalidate: 30 } }
         ),
-        fetch(`${process.env.LOCAL_URL}/api/manageArticle?action=getExistingCategories`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/manageArticle?action=getExistingCategories`, {
             next: { revalidate: 120 },
         }),
     ]);

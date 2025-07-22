@@ -4,7 +4,7 @@ import { SignedIn } from "@clerk/nextjs";
 
 const WriteArticle = async () => {
     const req_articleCategories = await fetch(
-        `${process.env.LOCAL_URL}/api/manageArticle?action=getExistingCategories`,
+        `${process.env.NEXT_PUBLIC_SITE_URL}/api/manageArticle?action=getExistingCategories`,
         { cache: 'no-store' }
     );
     const categories: Category[] = await req_articleCategories.json();

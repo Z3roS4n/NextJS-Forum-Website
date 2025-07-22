@@ -8,10 +8,10 @@ const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }
     const { article } = await params;
 
     const [article_req, comments_req] = await Promise.all([
-        fetch(`${process.env.LOCAL_URL || ''}/api/articles?idart=${article}`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles?idart=${article}`, {
             next: { revalidate: 120 } 
         }),
-        fetch(`${process.env.LOCAL_URL || ''}/api/comments?idart=${article}`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/comments?idart=${article}`, {
             cache: 'no-store'
         })
     ]);
