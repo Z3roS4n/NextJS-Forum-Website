@@ -1,17 +1,11 @@
 
 import ArticleViewer from "@/components/articles/articleViewer";
 import CommentHandler from "@/components/articles/commentsHandler";
-import { Article_Category, Article_Category_Author, Comment_Author_Subscription } from "@/types/components";
+import { Article_Category_Author, Comment_Author_Subscription } from "@/types/components";
 import Link from "next/link";
 
-interface ArticlePageProps {
-    params: {
-        article: string;
-    };
-}
-
-const ArticlePage = async ({ params }: ArticlePageProps) => {
-    const { article } = params;
+const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }) => {
+    const { article } = await params;
 
     const [article_req, comments_req] = await Promise.all([
         fetch(`${process.env.LOCAL_URL || ''}/api/articles?idart=${article}`, {
