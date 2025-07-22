@@ -11,7 +11,7 @@ interface ArticlePageProps {
 }
 
 const ArticlePage = async ({ params }: ArticlePageProps) => {
-    const { article } = await params;
+    const { article } = params;
 
     const [article_req, comments_req] = await Promise.all([
         fetch(`${process.env.LOCAL_URL || ''}/api/articles?idart=${article}`, {
