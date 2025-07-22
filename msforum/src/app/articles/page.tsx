@@ -13,7 +13,6 @@ const ArticlesPage = async () => {
     const articles: Article_Category_Author[] = await articlesRes.json();
     const categories: Category[] = await categoriesRes.json();
 
-
     return (
         <>
             <div className="page-container">
