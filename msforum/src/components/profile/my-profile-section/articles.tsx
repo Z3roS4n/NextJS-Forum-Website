@@ -1,32 +1,30 @@
 "use client"
 
 import { Article } from "@/types/components";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProfileArticlesProps {
     userId: string;
 }
 
 const ProfileArticles = ({ userId }: ProfileArticlesProps) => {
-    const [articles, setArticles] = useState<Article[]>([]);
+    const { isPending, error, data: articles } = useQuery<Article[]>({
+        queryKey: ['profile_articles', userId], // Include userId nella chiave
+        queryFn: async () => {
+            const res = await fetch('/api/userArticles', {
+                cache: 'no-cache',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: userId }),
+            });
 
-    useEffect(
-        () => {
-            const fetchArticles = async () => {
-                const res = await fetch('/api/userArticles', 
-                    { 
-                        cache: 'no-cache', 
-                        method: 'POST', 
-                        headers: { 'Content-Type': 'application/json' }, 
-                        body: JSON.stringify({ id: userId }) 
-                    }
-                );
-                const data = await res.json();
-                setArticles(data);
-            } 
-            fetchArticles();   
-        }, [userId]
-    );
+            if (!res.ok) throw new Error('Errore nel caricamento articoli');
+            return res.json();
+        },
+    });
+
+    if (isPending) return <div>Caricamento...</div>;
+    if (error) return <div>Errore!</div>;
 
     const deleteArticle = async (idart: number) => {
         //const delete_req = fetch(`/api/userArticles/${idart}`, { method: 'DELETE' })

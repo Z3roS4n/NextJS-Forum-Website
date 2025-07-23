@@ -12,6 +12,7 @@ import { isClerkRuntimeError, isReverificationCancelledError } from "@clerk/next
 import { Category } from "@/generated/prisma";
 import ArticlesComponent from "../articles/articlesComponent";
 import { useError } from "@/app/context/ErrorContext";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 interface MyProfileSectionParams {
     userInfo: Author_Subscription;
@@ -31,8 +32,29 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
     const [RMContent, setRMContent] = useState<string>(userInfo.readme);
     const [UserBio, setUserBio] = useState<string>(userInfo.bio);
     const [Username, setUsername] = useState<string>(userInfo.username);
-    const [Articles, setArticles] = useState<Article_Category_Author[]>();
-    const [Categories, setCategories] = useState<Category[]>();
+    
+    const { data: Articles, isPending: loadingArticles, error: errorArticles } = useQuery<Article_Category_Author[]>({
+        queryKey: ['articles', userInfo.user_id],
+        queryFn: async () => {
+            const res = await fetch(`/api/articles?user_id=${userInfo.user_id}`, {
+                next: { revalidate: 30 },
+            });
+            if (!res.ok) throw new Error('Errore articoli');
+            return res.json();
+        },
+        enabled: !!userInfo.user_id,
+    });
+
+    const { data: Categories, isPending: loadingCategories, error: errorCategories } = useQuery<Category[]>({
+        queryKey: ['categories'],
+        queryFn: async () => {
+            const res = await fetch(`/api/manageArticle?action=getExistingCategories`, {
+                next: { revalidate: 120 },
+            });
+            if (!res.ok) throw new Error('Errore categorie');
+            return res.json();
+        },
+    });
 
     const postUserChanges = async (action: string) => {
         try {
@@ -66,37 +88,6 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
             return showError("There was an unexpected error, retry later.", "Client Error")
         }
     }
-
-    useEffect(() => {
-        if (!userInfo?.user_id) return;
-
-        const fetchAPIServer = async () => {
-            try {
-                const [fetchArticles, fetchCategories] = await Promise.all([
-                    fetch(`/api/articles?user_id=${userInfo.user_id}`, {
-                        next: { revalidate: 30 },
-                    }),
-                    fetch(`/api/manageArticle?action=getExistingCategories`, {
-                        next: { revalidate: 120 },
-                    }),
-                ]);
-
-                if (!fetchArticles.ok || !fetchCategories.ok) {
-                    throw new Error("Error on data retrieval");
-                }
-
-                const articles = await fetchArticles.json();
-                const categories = await fetchCategories.json();
-
-                setArticles(articles);
-                setCategories(categories);
-            } catch (error) {
-                console.error("Fetch error:", error);
-            }
-        };
-
-        fetchAPIServer();
-    }, [userInfo?.user_id]);
 
     const handleSaveEdits = async () => {
         try {
@@ -220,7 +211,11 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
 
                             <div hidden={!selectedSection("articles")} className="w-1/1">
                                 <div className="article-container flex-col gap-2 w-1/1">
-                                    <ArticlesComponent articles={Articles || []} categories={Categories || []} limitIndex={5}/>
+                                    { errorArticles || errorCategories ? <div>Errore nel caricamento</div> : '' }
+                                    { 
+                                        loadingArticles || loadingCategories ? <div>Loading...</div>
+                                        : <ArticlesComponent articles={Articles || []} categories={Categories || []} limitIndex={5}/>
+                                    }
                                 </div>
                             </div>
 
