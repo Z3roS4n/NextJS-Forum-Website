@@ -4,11 +4,9 @@ import { Comment_Author_Subscription } from "@/types/components";
 //import { currentUser } from "@clerk/nextjs/server";
 import { useUser } from "@clerk/nextjs"
 import Link from "next/link";
-import ErrorPopup from "../ui/error_popup";
 import { useError } from "@/app/context/ErrorContext";
 import CommentWriter from "./commentWriter";
 import { useState } from "react";
-import { PostCommentResponse } from "@/types/api";
 
 import { useRouter } from 'next/navigation';
 
