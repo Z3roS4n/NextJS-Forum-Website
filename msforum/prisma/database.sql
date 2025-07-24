@@ -1,3 +1,33 @@
+CREATE TABLE public.badge_grades (
+  idgrade bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  name text,
+  CONSTRAINT badge_grades_pkey PRIMARY KEY (idgrade)
+);
+
+CREATE TABLE public.user_badge (
+  idbadge bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  obtained_at timestamp with time zone NOT NULL DEFAULT now(),
+  idgrade bigint NOT NULL,
+  user_id character varying,
+  CONSTRAINT user_badge_pkey PRIMARY KEY (idbadge),
+  CONSTRAINT user_badge_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.userdata(user_id),
+  CONSTRAINT user_badge_idgrade_fkey FOREIGN KEY (idgrade) REFERENCES public.badge_grades(idgrade)
+);
+
+CREATE TABLE public.notification (
+  idnotification bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  seen boolean NOT NULL DEFAULT false,
+  type text NOT NULL,
+  user_id character varying NOT NULL,
+  idart integer,
+  mention_author character varying,
+  CONSTRAINT notification_pkey PRIMARY KEY (idnotification),
+  CONSTRAINT Notification_mention_author_fkey FOREIGN KEY (mention_author) REFERENCES public.userdata(user_id),
+  CONSTRAINT Notification_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.userdata(user_id),
+  CONSTRAINT Notification_idart_fkey FOREIGN KEY (idart) REFERENCES public.article(idart)
+);
 -- msforum database schema
 
 CREATE TABLE public.category (

@@ -1,3 +1,20 @@
+-- Insert badge grades
+INSERT INTO public.badge_grades (name) VALUES
+  ('Beginner'),
+  ('Contributor'),
+  ('Expert');
+
+-- Insert user badges
+INSERT INTO public.user_badge (idgrade, user_id) VALUES
+  (1, 'u1'),
+  (2, 'u2'),
+  (3, 'u3');
+
+-- Insert notifications
+INSERT INTO public.notification (type, user_id, idart, mention_author) VALUES
+  ('mention', 'u1', 1, 'u2'),
+  ('reply', 'u2', 2, 'u1'),
+  ('upvote', 'u3', 3, NULL);
 -- Test data for msforum database
 
 -- Insert categories

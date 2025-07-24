@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -8,57 +7,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Article {
-  idart     Int      @id @default(autoincrement())
-  content   String
-  user_id   String
-  idcat     Int?
-  title     String
-  datetime  DateTime @default(now())
-
-  category  Category? @relation(fields: [idcat], references: [idcat])
-  author    Userdata  @relation(fields: [user_id], references: [user_id])
-  comments  Comment[]
-
-  @@map("article")
-}
-
 model Category {
   idcat       Int       @id @default(autoincrement())
   name        String
-  description String
+  description String?
 
   articles    Article[]
 
   @@map("category")
-}
-
-model Comment {
-  idcomment Int      @id @default(autoincrement())
-  content   String
-  idart     Int
-  user_id   String
-  reply_to  Int?
-  upvotes   Int      @default(0)
-  datetime  DateTime @default(now())
-
-  article   Article  @relation(fields: [idart], references: [idart])
-  author    Userdata @relation(fields: [user_id], references: [user_id])
-
-  @@map("comment")
-}
-
-model Draft {
-  draftid  Int   @id @default(autoincrement())
-  title    String
-  content  String
-  date     DateTime
-  archived Boolean  @default(false)
-  user_id  String
-
-  author   Userdata @relation(fields: [user_id], references: [user_id])
-
-  @@map("draft")
 }
 
 model Subscriptions {
@@ -72,18 +28,135 @@ model Subscriptions {
 }
 
 model Userdata {
-  user_id        String        @id
-  email          String
-  username       String @unique
-  idsub          Int?
-  bio            String? @db.VarChar(256)
-  readme         String? @db.VarChar(1024)
+  user_id         String   @id
+  email           String
+  idsub           Int?
+  apiToken        String   @unique @default(dbgenerated("gen_random_uuid()"))
+  username        String   @unique @default("John Doe")
+  bio             String?  @default("A beautiful msforum user!")
+  readme          String?  @default("# 👋 Welcome to your msforum profile! ...")
   profile_picture String?
 
-  subscription   Subscriptions? @relation(fields: [idsub], references: [idsub])
-  articles       Article[]
-  comments       Comment[]
-  drafts         Draft[]
+  subscription    Subscriptions? @relation(fields: [idsub], references: [idsub])
+
+  articles        Article[]
+  comments        Comment[]
+  drafts          Draft[]
+  upvoteArticles  UpvoteArticle[]
+  upvoteComments  UpvoteComment[]
+  userBadges      UserBadge[]
+
+  notifications   Notification[] @relation("NotificationUser")
+  mentions        Notification[] @relation("MentionAuthor")
 
   @@map("userdata")
+}
+
+model Article {
+  idart    Int      @id @default(autoincrement())
+  content  String
+  user_id  String
+  idcat    Int?
+  title    String
+  datetime DateTime @default(now())
+
+  user     Userdata  @relation(fields: [user_id], references: [user_id])
+  category Category? @relation(fields: [idcat], references: [idcat])
+  comments Comment[]
+  upvotes  UpvoteArticle[]
+  notifications Notification[]
+
+  @@map("article")
+}
+
+model Comment {
+  idcomment Int      @id @default(autoincrement())
+  content   String
+  idart     Int
+  user_id   String
+  datetime  DateTime @default(now())
+  reply_to  Int?
+  upvotes   Int      @default(0)
+
+  article   Article  @relation(fields: [idart], references: [idart])
+  user      Userdata @relation(fields: [user_id], references: [user_id])
+  upvoteComments UpvoteComment[]
+
+  @@map("comment")
+}
+
+model Draft {
+  draftid  BigInt   @id @default(autoincrement())
+  title    String
+  content  String
+  date     DateTime
+  archived Boolean  @default(false)
+  user_id  String
+
+  user     Userdata @relation(fields: [user_id], references: [user_id])
+
+  @@map("draft")
+}
+
+model UpvoteArticle {
+  idupart BigInt  @id @default(autoincrement())
+  user_id String
+  idart   Int
+  upvoted Boolean @default(false)
+
+  user    Userdata @relation(fields: [user_id], references: [user_id])
+  article Article  @relation(fields: [idart], references: [idart])
+
+  @@map("upvote_article")
+}
+
+model UpvoteComment {
+  idupcom   BigInt  @id @default(autoincrement())
+  user_id   String
+  idcomment Int
+  upvoted   Boolean @default(false)
+
+  user     Userdata @relation(fields: [user_id], references: [user_id])
+  comment  Comment  @relation(fields: [idcomment], references: [idcomment])
+
+  @@map("upvote_comment")
+}
+
+model BadgeGrades {
+  idgrade    BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now())
+  name       String?
+
+  userBadges UserBadge[]
+
+  @@map("badge_grades")
+}
+
+model UserBadge {
+  idbadge    BigInt   @id @default(autoincrement())
+  obtained_at DateTime @default(now())
+  idgrade    BigInt
+  user_id    String?
+
+  grade      BadgeGrades @relation(fields: [idgrade], references: [idgrade])
+  user       Userdata?   @relation(fields: [user_id], references: [user_id])
+
+  @@map("user_badge")
+}
+
+model Notification {
+  idnotification BigInt   @id @default(autoincrement())
+  created_at     DateTime @default(now())
+  seen           Boolean  @default(false)
+  type           String
+  user_id        String
+  idart          Int?
+  mention_author String?
+
+  user          Userdata  @relation("NotificationUser", fields: [user_id], references: [user_id])
+  mentionAuthor Userdata? @relation("MentionAuthor", fields: [mention_author], references: [user_id])
+
+  article       Article?  @relation(fields: [idart], references: [idart])
+
+  @@map("notification")
 }
