@@ -69,7 +69,7 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
                 </div>
                 <div className="article-container flex flex-row self-start gap-2"> {/* bg-transparent shadow-none border-0 not-lg:m-0 */}
                     <button 
-                        className="items-center hover:bg-gray-200 rounded-md p-2 text-2xl"
+                        className="items-center hover:bg-gray-200 rounded-md p-2"
                         type="button"><FontAwesomeIcon icon={faEnvelope} /> 
                         {/* 
                             TanStack Query to `/api/notifications?user_id=${userInfo.user_id}`,
@@ -77,7 +77,7 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
                         */}
                     </button>
                     <button 
-                        className="items-center hover:bg-gray-200 rounded-md p-2 text-2xl"
+                        className="items-center hover:bg-gray-200 rounded-md p-2"
                         type="button"><FontAwesomeIcon icon={faQuoteLeft} />
                         {/*
                             TanStack Query to `/api/mentions/retrieve?user_id=${userInfo.user_id}`,
