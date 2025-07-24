@@ -1,45 +1,5 @@
 
 # NextJS Forum Website
-
-## 🇮🇹 Descrizione
-> ⚠️ Questo progetto è amatoriale, realizzato a solo scopo di apprendimento e puro hobby.
-
-Questo progetto è una webapp di forum moderno, sviluppato per offrire una piattaforma di discussione intuitiva e performante. Gli utenti possono registrarsi, autenticarsi, pubblicare articoli, commentare e interagire con altri membri della community. L'interfaccia è progettata per essere semplice, responsiva e user-friendly.
-
-Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**: le principali funzionalità di autenticazione, pubblicazione articoli e commenti sono operative. Alcune feature avanzate e ottimizzazioni sono ancora in fase di implementazione.
-
-## 🇮🇹 Tecnologie Utilizzate
-- **Next.js**: framework React per lo sviluppo di applicazioni web full-stack, con rendering lato server e routing avanzato.
-- **TanStack Query**: gestione avanzata dello stato asincrono e delle query lato client.
-- **Supabase**: backend as a service per database, autenticazione e storage (in futuro potrebbe essere sostituito o integrato).
-- **Prisma ORM**: gestione e interazione tipizzata con il database tramite schema Prisma.
-- **Clerk**: sistema di autenticazione e gestione utenti (verrà sostituito con autenticazione JWT nella versione finale).
-- **TypeScript**: tipizzazione statica per maggiore affidabilità e manutenibilità del codice.
-- **Tailwind CSS**: per uno styling rapido, modulare e responsivo.
-- **Altre librerie**: varie utility e componenti per migliorare l'esperienza utente e la sicurezza.
-
-
-- [x] Autenticazione utente (Clerk, in futuro JWT)
-- [x] Creazione e visualizzazione articoli
-- [x] Commenti agli articoli
-- [x] Profilo utente e statistiche
-- [ ] Gestione avanzata permessi/autorizzazioni
-- [ ] Notifiche e sistema di moderazione
-- [ ] Ottimizzazione performance e sicurezza
-- [ ] Commenti con supporto Markdown
-- [ ] Risposte ai commenti (sempre con Markdown)
-- [ ] Tag utenti con @username
-- [ ] Badge utente
-- [ ] Subscription utente
-- [x] Protezione delle API
-- [ ] Rate limit sulle API
-- [ ] Upvotes a commenti e articoli
-- [ ] Integrazioni con ChatGPT: Generatore Titolo Articolo, Auto Categoria, Traduzione automatica Articoli e Commenti (tramite API Converzia.net)
-
----
-
-Per qualsiasi domanda o contributo, sentiti libero di aprire una issue o una pull request!
-
 ---
 
 ## 🇬🇧 Description
@@ -81,3 +41,44 @@ Currently, the project is at **30% development**, but it is already **functional
 ---
 
 For any questions or contributions, feel free to open an issue or pull request!
+
+---
+
+## 🇮🇹 Descrizione
+> ⚠️ Questo progetto è amatoriale, realizzato a solo scopo di apprendimento e puro hobby.
+
+Questo progetto è una webapp di forum moderno, sviluppato per offrire una piattaforma di discussione intuitiva e performante. Gli utenti possono registrarsi, autenticarsi, pubblicare articoli, commentare e interagire con altri membri della community. L'interfaccia è progettata per essere semplice, responsiva e user-friendly.
+
+Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**: le principali funzionalità di autenticazione, pubblicazione articoli e commenti sono operative. Alcune feature avanzate e ottimizzazioni sono ancora in fase di implementazione.
+
+## 🇮🇹 Tecnologie Utilizzate
+- **Next.js**: framework React per lo sviluppo di applicazioni web full-stack, con rendering lato server e routing avanzato.
+- **TanStack Query**: gestione avanzata dello stato asincrono e delle query lato client.
+- **Supabase**: backend as a service per database, autenticazione e storage (in futuro potrebbe essere sostituito o integrato).
+- **Prisma ORM**: gestione e interazione tipizzata con il database tramite schema Prisma.
+- **Clerk**: sistema di autenticazione e gestione utenti (verrà sostituito con autenticazione JWT nella versione finale).
+- **TypeScript**: tipizzazione statica per maggiore affidabilità e manutenibilità del codice.
+- **Tailwind CSS**: per uno styling rapido, modulare e responsivo.
+- **Altre librerie**: varie utility e componenti per migliorare l'esperienza utente e la sicurezza.
+
+
+- [x] Autenticazione utente (Clerk, in futuro JWT)
+- [x] Creazione e visualizzazione articoli
+- [x] Commenti agli articoli
+- [x] Profilo utente e statistiche
+- [ ] Gestione avanzata permessi/autorizzazioni
+- [ ] Notifiche e sistema di moderazione
+- [ ] Ottimizzazione performance e sicurezza
+- [ ] Commenti con supporto Markdown
+- [ ] Risposte ai commenti (sempre con Markdown)
+- [ ] Tag utenti con @username
+- [ ] Badge utente
+- [ ] Subscription utente
+- [x] Protezione delle API
+- [ ] Rate limit sulle API
+- [ ] Upvotes a commenti e articoli
+- [ ] Integrazioni con ChatGPT: Generatore Titolo Articolo, Auto Categoria, Traduzione automatica Articoli e Commenti (tramite API Converzia.net)
+
+---
+
+Per qualsiasi domanda o contributo, sentiti libero di aprire una issue o una pull request!
