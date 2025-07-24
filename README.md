@@ -61,7 +61,7 @@ Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**
 - **Tailwind CSS**: per uno styling rapido, modulare e responsivo.
 - **Altre librerie**: varie utility e componenti per migliorare l'esperienza utente e la sicurezza.
 
-
+## 🇮🇹 Stato del Progetto
 - [x] Autenticazione utente (Clerk, in futuro JWT)
 - [x] Creazione e visualizzazione articoli
 - [x] Commenti agli articoli
