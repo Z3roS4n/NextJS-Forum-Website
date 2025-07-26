@@ -50,7 +50,7 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
                     TanStack Query to `/api/notifications?user_id=${userInfo.user_id}`,
                     poi apre con un dropdown le notifiche (con scroll controllato, solo ultime 30)
                 */}
-                <div className={"article-container flex-col fixed right-45 w-90 gap-4 " + (!toggle ? 'not-hover:hidden' : '')}>
+                <div className={"article-container flex-col fixed right-45 w-90 gap-4 opacity-100 transition-opacity duration-150 " + (!toggle ? 'not-hover:opacity-0 not-[opacity-100]:hidden' : '')}>
                     { /* isLoading ? <p>Notifications are loading...</p> : '' */}
                     { /* error ? <p>There was an error fetching your notification, try reloading the page!</p> : '' */}
 
