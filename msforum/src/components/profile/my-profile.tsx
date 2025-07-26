@@ -30,6 +30,11 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
             icon: <FontAwesomeIcon icon={faBook}></FontAwesomeIcon>
         },
         {
+            id: "notifications",
+            name: "Notifications",
+            icon: <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
+        },
+        {
             id: "security",
             name: "Security",
             icon: <FontAwesomeIcon icon={faShield}></FontAwesomeIcon>
@@ -50,6 +55,10 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
         setSection({ section: sectionId });
     }
 
+    const checkSelected = (selSection: string) => {
+        return section.section == selSection ? 'bg-[#D4E2FF]' : '';
+    }
+
     return (
         <div id="userProfile" className="flex lg:flex-col flex-col justify-around gap-2">
             <div id="userProfileSideBar" className="rounded-2xl flex lg:flex-row flex-col items-center gap-2">
@@ -57,17 +66,15 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
                     {
                         sections.map((sec) => (
                             <div key={sec.id}>
-                                <p className="not-lg:hidden items-center hover:bg-gray-200 rounded-md p-2" id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
+                                <p className={"not-lg:hidden items-center hover:bg-gray-200 rounded-md p-2 " + checkSelected(sec.id)} id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
                                     {sec.name}
                                 </p>
-                                <p className={`lg:hidden text-3xl items-center hover:bg-gray-200 rounded-md p-2`} id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
+                                <p className={`lg:hidden text-2xl items-center hover:bg-gray-200 rounded-md p-2 ` + checkSelected(sec.id)} id={sec.id} onClick={(e) => changeSection(e.currentTarget.id)}>
                                     {sec.icon}
                                 </p>
                             </div>
                         ))
                     }
-                </div>
-                <div className="article-container flex flex-row self-start gap-2"> {/* bg-transparent shadow-none border-0 not-lg:m-0 */}
                 </div>
             </div>
             <div id="userProfileSection">
