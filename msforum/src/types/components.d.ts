@@ -77,13 +77,14 @@ export interface Notification {
     idnotification: number;
     created_at: string;
     seen: boolean;
-    type: 'upvote' | 'mention_comment' | 'mention_article';
+    type: 'upvote_comment' | 'upvote_article' | 'comment_to_article' | 'mention_comment' | 'mention_article';
     user_id: string;
     idart: number | null;
-    mention_author: string | null
+    mention_author_id: string | null
 }
 
-export interface User_Mention_Notification extends Notification { 
-    mention?: Author | null;
+export interface User_Mention_Article_Notification extends Notification { 
+    mentionAuthor?: Author | null;
     user: Author;
+    article?: Article | null;
 }

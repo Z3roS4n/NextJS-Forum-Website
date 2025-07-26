@@ -24,7 +24,7 @@ const CommentHandler = ( { comments }: Params ) => {
 
     const [upvotes, setUpvotes] = useState<Upvote>(() => {
         const initialUpvotes: Upvote = {};
-        comments.forEach((comment) => {
+        (comments ?? []).forEach((comment) => {
             initialUpvotes[comment.idcomment] = { upvotes: comment.upvotes, upvoted: false };
         });
         return initialUpvotes;

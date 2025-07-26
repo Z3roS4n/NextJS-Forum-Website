@@ -67,3 +67,8 @@ export interface TopUserByArticles extends TopUserBaseResponse {
 export interface TopUserByComments extends TopUserBaseResponse {
     commentsCount: number;
 }
+
+export interface PostNotificationRequest {
+    action: 'set_read' | 'set_unread' | 'post_notification';
+    notifications_ids: Array<number>;
+}
