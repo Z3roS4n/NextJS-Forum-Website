@@ -72,3 +72,18 @@ export interface Subscription {
     name: string;
     description: string;
 }
+
+export interface Notification {
+    idnotification: number;
+    created_at: string;
+    seen: boolean;
+    type: 'upvote' | 'mention_comment' | 'mention_article';
+    user_id: string;
+    idart: number | null;
+    mention_author: string | null
+}
+
+export interface User_Mention_Notification extends Notification { 
+    mention?: Author | null;
+    user: Author;
+}

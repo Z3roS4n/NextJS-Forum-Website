@@ -68,22 +68,6 @@ const MyProfile = ({ userInfo }: MyProfileParams) => {
                     }
                 </div>
                 <div className="article-container flex flex-row self-start gap-2"> {/* bg-transparent shadow-none border-0 not-lg:m-0 */}
-                    <button 
-                        className="items-center hover:bg-gray-200 rounded-md p-2"
-                        type="button"><FontAwesomeIcon icon={faEnvelope} /> 
-                        {/* 
-                            TanStack Query to `/api/notifications?user_id=${userInfo.user_id}`,
-                            poi apre con un dropdown le notifiche (con scroll controllato, solo ultime 30)
-                        */}
-                    </button>
-                    <button 
-                        className="items-center hover:bg-gray-200 rounded-md p-2"
-                        type="button"><FontAwesomeIcon icon={faQuoteLeft} />
-                        {/*
-                            TanStack Query to `/api/mentions/retrieve?user_id=${userInfo.user_id}`,
-                            poi apre con un dropdown le mentions (con scroll controllato, solo ultime 30) 
-                        */}
-                    </button>
                 </div>
             </div>
             <div id="userProfileSection">

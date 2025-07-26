@@ -12,13 +12,13 @@ const UserStats = ({ user_id }: UserStatsParams) => {
     const { data: stats, error } = useQuery<UserStatsFunctionResponse>({
         queryKey: ['userStats', user_id],
         queryFn: async () => {
-            const res = await fetch(`/api/userStats?user_id=${user_id}`, {
-                next: { revalidate: 10 },
-            });
+            const res = await fetch(`/api/userStats?user_id=${user_id}`);
             if (!res.ok) throw new Error('Errore nel fetch');
             return res.json();
         },
         enabled: !!user_id, // evita fetch se user_id non c'è
+        staleTime: 1000 * 10,
+        gcTime: 1000 * 10, // 10 seconds alive
     });
     
     return (

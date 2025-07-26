@@ -1,6 +1,7 @@
 "use client"
 
 import { TopUsersResponse } from "@/types/api"
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react"
 
 interface FamousUsersParams {
@@ -8,24 +9,19 @@ interface FamousUsersParams {
 }
 
 const FamousUsers = ({ limit }: FamousUsersParams) => {
-    const [ scoreboard, setScoreboard ] = useState<TopUsersResponse>();
     const [ orderBy, setOrderBy ] = useState<keyof TopUsersResponse>("byArticles");
 
-    // Ottimizzare: Fare 3 request parallele, invece di un unica request. Il codice back-end è già predisposto (va solo ottimizzato)
-    useEffect(() => {
-        const fetchScoreboard = async () => {
-            try {
-                const res = await fetch(`/api/topUsers?limit=${limit}`, { next: { revalidate: 300 } })
-                if (!res.ok) throw new Error('Errore nel fetch');
-                const data: TopUsersResponse = await res.json();
-                setScoreboard(data);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-
-        fetchScoreboard();
-    }, [])
+    const { data: scoreboard, isLoading, error } = useQuery<TopUsersResponse>({
+        queryKey: ['scoreboard'],
+        queryFn: async () => {
+            const res = await fetch(`/api/topUsers?limit=${limit}`);
+            if (!res.ok) throw new Error('Errore nel fetch');
+            return res.json();
+        },
+        enabled: true,
+        staleTime: 1000 * 120,
+        gcTime: 1000 * 120, // 120 seconds alive
+    })
 
     return (
         <>

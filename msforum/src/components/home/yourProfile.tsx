@@ -2,26 +2,22 @@
 
 import { UserStatsFunctionResponse } from "@/types/api";
 import { useUser, SignedIn } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react"
 
 const YourProfile = () => {
     const { user } = useUser();
-    const [ stats, setStats ] = useState<UserStatsFunctionResponse>();
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const res = await fetch(`/api/userStats`, { next: { revalidate: 10 } });
-                if (!res.ok) throw new Error('Errore nel fetch');
-                const data: UserStatsFunctionResponse = await res.json();
-                setStats(data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchStats();
-    }, []);
+    const { data: stats, isLoading, error } = useQuery<UserStatsFunctionResponse>({
+        queryKey: ['user_stats'],
+        queryFn: async () => {
+            const res = await fetch(`/api/userStats`);
+            if(!res.ok) throw new Error('Fetch Error!');
+            return res.json();
+        },
+        staleTime: 1000 * 10,
+        gcTime: 1000 * 10,
+    });
 
     return (
         <> 
