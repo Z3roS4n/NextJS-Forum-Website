@@ -14,14 +14,14 @@ Currently, the project is at **30% development**, but it is already **functional
 - **TanStack Query**: advanced client-side async state and query management.
 - **Supabase**: backend as a service for database, authentication, and storage (may be replaced or integrated in the future).
 - **Prisma ORM**: type-safe database management and interaction via Prisma schema.
-- **Clerk**: authentication and user management system (will be replaced with JWT authentication in the final version).
+- **Clerk**: authentication and user management system (will be replaced with BetterAuth).
 - **TypeScript**: static typing for greater reliability and maintainability.
 - **Tailwind CSS**: for fast, modular, and responsive styling.
 - **Other libraries**: various utilities and components to improve user experience and security.
 
 
 ## 🇬🇧 Project Status
-- [x] User authentication (Clerk, JWT in the future)
+- [x] User authentication (Clerk, BetterAuth in the future)
 - [x] Article creation and viewing
 - [x] Article comments
 - [x] User profile and stats
@@ -56,13 +56,13 @@ Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**
 - **TanStack Query**: gestione avanzata dello stato asincrono e delle query lato client.
 - **Supabase**: backend as a service per database, autenticazione e storage (in futuro potrebbe essere sostituito o integrato).
 - **Prisma ORM**: gestione e interazione tipizzata con il database tramite schema Prisma.
-- **Clerk**: sistema di autenticazione e gestione utenti (verrà sostituito con autenticazione JWT nella versione finale).
+- **Clerk**: sistema di autenticazione e gestione utenti (verrà sostituito con BetterAuth).
 - **TypeScript**: tipizzazione statica per maggiore affidabilità e manutenibilità del codice.
 - **Tailwind CSS**: per uno styling rapido, modulare e responsivo.
 - **Altre librerie**: varie utility e componenti per migliorare l'esperienza utente e la sicurezza.
 
 ## 🇮🇹 Stato del Progetto
-- [x] Autenticazione utente (Clerk, in futuro JWT)
+- [x] Autenticazione utente (Clerk, in futuro BetterAuth)
 - [x] Creazione e visualizzazione articoli
 - [x] Commenti agli articoli
 - [x] Profilo utente e statistiche

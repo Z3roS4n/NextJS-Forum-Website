@@ -1,3 +1,60 @@
+// BETTER AUTH & USER
+
+export interface Session {
+  id: string;
+  user_id: string;
+  token: string;
+  expiresAt: Date;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Account {
+  id: string;
+  user_id: string;
+  accountId: string;
+  providerId: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
+  accessTokenExpiresAt?: Date | null;
+  refreshTokenExpiresAt?: Date | null;
+  scope?: string | null;
+  idToken?: string | null;
+  password?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Verification {
+  id: string;
+  identifier: string;
+  value: string;
+  expiresAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface User {
+    user_id: string;
+    email: string;
+    bio: string;
+    readme: string;
+    profile_picture?: string | null;
+    subscription?: Subscription | null;
+    emailVerified: boolean | null;
+}
+
+export interface Subscription {
+    idsub: number;
+    name: string;
+    description?: string | null;
+}
+
+
+// ARTICLES, CATEGORIES, COMMENTS
+
 export interface Article_Category {
     idart: number | null;
     idcat: number | null;
@@ -67,11 +124,7 @@ export interface Author_Subscription extends Author {
     subscription: Subscription | null;
 }
 
-export interface Subscription {
-    idsub: number;
-    name: string;
-    description: string;
-}
+// NOTIFICATIONS
 
 export interface Notification {
     idnotification: number;
