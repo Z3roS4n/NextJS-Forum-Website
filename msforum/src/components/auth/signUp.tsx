@@ -1,25 +1,64 @@
-"use client";
-import { useFormState } from "react-dom";
-import { signUpAction } from "@/actions/auth";
+// pages/sign-up.tsx
+"use client"
+
+import { useState } from 'react';
+import { authClient } from '@/lib/auth-client';
 
 const SignUp = () => {
-    // Remove useFormState, use action directly in form
-    // You may want to handle errors via server actions or useFormStatus if needed
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
-    // Wrap signUpAction to satisfy the expected return type
-    const handleSignUp = async (formData: FormData) => {
-        await signUpAction(formData);
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
 
-    return (
-        <form action={handleSignUp} method="post">
-            <input type="text" name="username" placeholder="Username" required />
-            <input type="email" name="email" placeholder="Email" required />
-            {/* Error handling can be added here if you return errors from signUpAction and pass them as props */}
-            <input type="password" name="password" placeholder="Password" required />
-            <button type="submit">Registrati</button>
-        </form>
-    );
-}
+    try {
+      const { data, error } = await authClient.signUp.email({
+        email,
+        password,
+        name,
+        callbackURL: '/dashboard',
+      });
+
+      if (error) {
+        setError(error.message ?? 'Si è verificato un errore');
+      } else {
+        // Gestisci il successo, ad esempio reindirizzando l'utente
+      }
+    } catch (err) {
+      setError('Errore durante la registrazione');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Nome"
+        required
+      />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        required
+      />
+      {error && <p>{error}</p>}
+      <button type="submit">Registrati</button>
+    </form>
+  );
+};
 
 export default SignUp;

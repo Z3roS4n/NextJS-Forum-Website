@@ -9,11 +9,11 @@ export const auth = betterAuth({
         provider: "postgresql",
     }),
     user: {
-        modelName: "userdata",
+        modelName: "Userdata",
         fields: {
+            id: "user_id",
             name: "username",
             image: "profile_picture",
-            id: "user_id"
         },
     },
     account: {
