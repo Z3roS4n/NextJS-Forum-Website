@@ -97,9 +97,17 @@ export interface Comment_Author_Subscription {
     idart: number;
     user_id: string;
     reply_to: number;
-    upvotes: number;
     author: Author_Subscription;
     datetime: string;
+    _count: {
+        upvoteComments: number
+    }
+}
+
+export interface Comment_Upvotes {
+    idcomment: number;
+    upvotes: number;
+    upvoted?: boolean;
 }
 
 export interface User_Subscription {

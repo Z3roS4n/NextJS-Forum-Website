@@ -6,41 +6,75 @@ import { PostCommentRequest, UpvoteCommentRequest } from "@/types/api";
 
 export async function GET(req: NextRequest) {
     try {
+        const user = await currentUser();
         const { searchParams } = new URL(req.url);
         const idart: number = Number(searchParams.get("idart"));
+        const upvotes: boolean = Boolean(searchParams.get('upvotes'));
 
-        const commentsRetrieval = await prisma.comment.findMany({
-            where: {
-                idart: idart,
-            },
-            select: {
-                idcomment: true,
-                user_id: true,
-                content: true,
-                reply_to: true,
-                datetime: true,
-                upvotes: true,
-                author: {
-                    select: {
-                        user_id: true,
-                        username: true,
-                        subscription: {
-                            select: {
+        let response;
+
+        if(!idart)
+            return NextResponse.json({ error: "Article ID's missing." }, { status: 401 });
+
+        if(upvotes) {
+            response = await prisma.comment.findMany({
+                where: { idart },
+                select: {
+                    idcomment: true,
+                    _count: {
+                        select: { upvoteComments: true }
+                    },
+                    upvoteComments: user
+                        ? {
+                            where: { user_id: user.id },
+                            select: { idupcom: true, user_id: true, idcomment: true }
+                        }
+                        : false
+                }
+            });
+
+            // Mappa il risultato per includere il campo "upvoted"
+            response = response.map(comment => ({
+                idcomment: comment.idcomment,
+                upvotes: comment._count.upvoteComments,
+                upvoted: user ? comment.upvoteComments.length > 0 : false
+            }));
+        } else
+            response = await prisma.comment.findMany({
+                where: {
+                    idart: idart,
+                },
+                select: {
+                    idcomment: true,
+                    user_id: true,
+                    content: true,
+                    reply_to: true,
+                    datetime: true,
+                    author: {
+                        select: {
+                            user_id: true,
+                            username: true,
+                            subscription: {
+                                select: {
                                 idsub: true,
                                 name: true,
+                                }
                             }
                         }
-                    }
-                }
-            },
-            orderBy: [
-                { datetime: 'desc' }
-            ]
-        }) 
+                    },
+                    _count: {
+                        select: {
+                            upvoteComments: true
+                        }
+                    },
+                },
+                orderBy: [
+                    { datetime: 'desc' }
+                ]
+            })
 
         //aggiornare con query per upvotes.
-
-        return NextResponse.json(commentsRetrieval);
+        return NextResponse.json(response);
 
     } catch(error) {
         console.log(error);
@@ -57,7 +91,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        if(request.action === 'comment') {
+        if(request.action == 'comment' || request.action == 'reply') {
             const prisma_insert = await prisma.comment.createManyAndReturn({
                 data: {
                     user_id: user.id,
@@ -70,20 +104,59 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(prisma_insert);
         }
 
-        if(request.action === 'upvote') {
+        if(request.action === 'set_upvote') {
             //aggiornare con query per upvotes
-            const prisma_update = await prisma.comment.update({
-                where: {
-                    idcomment: request.data.idcomment,
-                },
+            const upvote_insert = await prisma.upvoteComment.createManyAndReturn({
                 data: {
-                    upvotes: {
-                        set: request.data.upvotes,
-                    }
+                    user_id: user.id,
+                    idcomment: request.data.idcomment
                 }
             })
-            return NextResponse.json(prisma_update);
         }
+
+        if(request.action === 'toggle_upvote') {
+            const upvote = await prisma.upvoteComment.findFirst({
+                where: {
+                    user_id: user.id,
+                    idcomment: request.data.idcomment
+                }
+            });
+
+            if (upvote) {
+                const upvote_delete = await prisma.upvoteComment.delete({
+                    where: {
+                        idupcom: upvote.idupcom
+                    }
+                });
+            } else {
+                const upvote_insert = await prisma.upvoteComment.createManyAndReturn({
+                    data: {
+                        user_id: user.id,
+                        idcomment: request.data.idcomment
+                    }
+                })
+            }
+        }
+
+        if(request.action === 'rem_upvote') {
+            //aggiornare con query per upvotes
+            // First, find the unique upvote record for this user and comment
+            const upvote = await prisma.upvoteComment.findFirst({
+                where: {
+                    user_id: user.id,
+                    idcomment: request.data.idcomment
+                }
+            });
+
+            if (upvote) {
+                const upvote_delete = await prisma.upvoteComment.delete({
+                    where: {
+                        idupcom: upvote.idupcom
+                    }
+                });
+            }
+        }
+
             
     } catch(error) {
         console.log(error)

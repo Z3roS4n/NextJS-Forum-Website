@@ -45,7 +45,9 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
             },
             comments: {
                 select: {
-                    upvotes: true,
+                    _count: {
+                        select: { upvoteComments: true }
+                    }
                 },
             },
         },
@@ -56,7 +58,7 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
     }
 
     const totalUpvotesReceived = userInfo.comments.reduce(
-        (sum, c) => sum + (c.upvotes ?? 0),
+        (sum, c) => sum + (c._count.upvoteComments ?? 0),
         0
     );
 

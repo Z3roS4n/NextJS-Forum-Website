@@ -214,7 +214,7 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                     { errorArticles || errorCategories ? <div>Errore nel caricamento</div> : '' }
                                     { 
                                         loadingArticles || loadingCategories ? <div>Loading...</div>
-                                        : <ArticlesComponent articles={Articles || []} categories={Categories || []} limitIndex={5}/>
+                                        : <ArticlesComponent articles={Articles || []} categories={(Categories || []).map(cat => ({ ...cat, description: cat.description ?? "" }))} limitIndex={5}/>
                                     }
                                 </div>
                             </div>

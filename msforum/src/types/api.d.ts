@@ -10,15 +10,14 @@ export interface PostUserInformations {
 }
 
 export interface UpvoteCommentRequest {
-    action: 'upvote';
+    action: 'set_upvote' | 'rem_upvote' | 'toggle_upvote';
     data: {
         idcomment: number;
-        upvotes: number;
     }
 }
 
 export interface PostCommentRequest {
-    action: 'comment';
+    action: 'comment' | 'reply';
     data: {
         content: string;
         datetime: string;

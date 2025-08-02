@@ -7,17 +7,13 @@ import Link from "next/link";
 const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }) => {
     const { article } = await params;
 
-    const [article_req, comments_req] = await Promise.all([
+    const [article_req] = await Promise.all([
         fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles?idart=${article}`, {
             next: { revalidate: 120 } 
-        }),
-        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/comments?idart=${article}`, {
-            cache: 'no-store'
         })
     ]);
     const art_res_json: Article_Category_Author[] = await article_req.json();
     const artData: Article_Category_Author = art_res_json[0];
-    const comm_res_json: Comment_Author_Subscription[] = await comments_req.json();
 
     return (
         <>
@@ -32,8 +28,7 @@ const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }
                 <ArticleViewer article={artData}></ArticleViewer>
 
                 {/* Comment Section (Another component, must be client side, as an interactive panel) */}
-                <h1 className="title">Comments ({comm_res_json.length})</h1>
-                <CommentHandler comments={comm_res_json}></CommentHandler>
+                <CommentHandler></CommentHandler>
             </div>
         </>
     );

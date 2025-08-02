@@ -9,9 +9,11 @@ import { NextResponse } from "next/server";
 
 interface CommentWriterParams {
     onSubmit: (comment: PostCommentResponse) => void;
+    action?: 'comment' | 'reply';
+    reply_to?: number;
 }
 
-const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
+const CommentWriter = ({ onSubmit, action = 'comment', reply_to }: CommentWriterParams) => {
     const [ comment, setComment ] = useState<string>("");
     const { showError } = useError();
     const params =  useParams();
@@ -21,12 +23,12 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
     const submitComment = async (content: string): Promise<PostCommentResponse> => {
 
         const body: PostCommentRequest = {
-            action: 'comment',
+            action: action,
             data: {
                 idart: Number(params.article),
                 content: content,
                 datetime: new Date().toISOString(),
-                reply_to: null
+                reply_to: reply_to ? reply_to : null
             }
         }
 
@@ -59,10 +61,10 @@ const CommentWriter = ({ onSubmit }: CommentWriterParams) => {
     }
 
     return (
-        <div className="article-container flex-col gap-2 lg:w-1/2">
-            <label className="font-bold text-lg" htmlFor="leaveComment">Leave a Comment</label>
+        <div className="article-container flex-col gap-2">
+            <label className="font-bold text-lg" htmlFor="leaveComment">Leave a {action}</label>
             <textarea className="resize-none input" id="leaveComment" value={comment} rows={5} onChange={(e) => setComment(e.target.value)}/>
-            <button className="btn-primary lg:w-1/4 self-end" onClick={() => addComment(comment)}>Submit Comment</button>
+            <button className="btn-primary lg:w-1/4 self-end" onClick={() => addComment(comment)}>Submit {action}</button>
         </div>
     )
 
