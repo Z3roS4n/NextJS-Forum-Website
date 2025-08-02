@@ -7,7 +7,7 @@
 
 This project is a modern forum webapp, designed to offer an intuitive and high-performance discussion platform. Users can register, authenticate, publish articles, comment, and interact with other community members. The interface is simple, responsive, and user-friendly.
 
-Currently, the project is at **30% development**, but it is already **functional**: the main features such as authentication, article publishing, and comments are working. Some advanced features and optimizations are still in progress.
+Currently, the project is at **40% development**, but it is already **functional**: the main features such as authentication, article publishing, and comments are working. Some advanced features and optimizations are still in progress.
 
 ## 🇬🇧 Technologies Used
 - **Next.js**: React framework for full-stack web development, with server-side rendering and advanced routing.
@@ -27,15 +27,17 @@ Currently, the project is at **30% development**, but it is already **functional
 - [x] User profile and stats
 - [ ] Advanced permissions/authorization management
 - [ ] Notifications and moderation system (Using AI)
+- [x] Notification viewer
 - [ ] Performance and security optimization
 - [ ] Comments with Markdown support
-- [ ] Replies to comments (also with Markdown)
+- [x] Replies to comments
 - [ ] User tagging with @username
 - [ ] User badge
 - [ ] User subscription
 - [x] API protection
 - [ ] API rate limiting
-- [ ] Upvotes to comments and articles
+- [x] Upvotes to comments
+- [ ] Upvotes to articles
 - [ ] Integrations with ChatGPT: Article Title Generator, Auto Category, Article and Comment Auto-Translations (Using Converzia.net APIs)
 
 ---
@@ -49,7 +51,7 @@ For any questions or contributions, feel free to open an issue or pull request!
 
 Questo progetto è una webapp di forum moderno, sviluppato per offrire una piattaforma di discussione intuitiva e performante. Gli utenti possono registrarsi, autenticarsi, pubblicare articoli, commentare e interagire con altri membri della community. L'interfaccia è progettata per essere semplice, responsiva e user-friendly.
 
-Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**: le principali funzionalità di autenticazione, pubblicazione articoli e commenti sono operative. Alcune feature avanzate e ottimizzazioni sono ancora in fase di implementazione.
+Attualmente il progetto è al **40% dello sviluppo**, ma è già **funzionante**: le principali funzionalità di autenticazione, pubblicazione articoli e commenti sono operative. Alcune feature avanzate e ottimizzazioni sono ancora in fase di implementazione.
 
 ## 🇮🇹 Tecnologie Utilizzate
 - **Next.js**: framework React per lo sviluppo di applicazioni web full-stack, con rendering lato server e routing avanzato.
@@ -61,22 +63,23 @@ Attualmente il progetto è al **30% dello sviluppo**, ma è già **funzionante**
 - **Tailwind CSS**: per uno styling rapido, modulare e responsivo.
 - **Altre librerie**: varie utility e componenti per migliorare l'esperienza utente e la sicurezza.
 
-## 🇮🇹 Stato del Progetto
 - [x] Autenticazione utente (Clerk, in futuro BetterAuth)
 - [x] Creazione e visualizzazione articoli
 - [x] Commenti agli articoli
 - [x] Profilo utente e statistiche
 - [ ] Gestione avanzata permessi/autorizzazioni
-- [ ] Notifiche e sistema di moderazione
+- [ ] Notifiche e sistema di moderazione (con AI)
+- [x] Visualizzatore notifiche
 - [ ] Ottimizzazione performance e sicurezza
 - [ ] Commenti con supporto Markdown
-- [ ] Risposte ai commenti (sempre con Markdown)
+- [x] Risposte ai commenti
 - [ ] Tag utenti con @username
 - [ ] Badge utente
 - [ ] Subscription utente
 - [x] Protezione delle API
 - [ ] Rate limit sulle API
-- [ ] Upvotes a commenti e articoli
+- [x] Upvotes ai commenti
+- [ ] Upvotes agli articoli
 - [ ] Integrazioni con ChatGPT: Generatore Titolo Articolo, Auto Categoria, Traduzione automatica Articoli e Commenti (tramite API Converzia.net)
 
 ---
