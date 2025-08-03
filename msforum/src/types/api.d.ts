@@ -9,6 +9,14 @@ export interface PostUserInformations {
     }
 }
 
+export interface PostFollow {
+    action: 'follow' | 'unfollow'
+    data: {
+        follower: string;
+        followed: string;
+    }
+}
+
 export interface UpvoteCommentRequest {
     action: 'set_upvote' | 'rem_upvote' | 'toggle_upvote';
     data: {
