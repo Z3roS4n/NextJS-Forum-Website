@@ -36,6 +36,13 @@ export interface Verification {
   updatedAt: Date;
 }
 
+export interface Follow {
+    idfollow: number;
+    follower: User;
+    followed: User;
+    created_at: string;
+}
+
 export interface User {
     user_id: string;
     email: string;

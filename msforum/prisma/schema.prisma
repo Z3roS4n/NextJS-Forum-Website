@@ -143,6 +143,20 @@ model UserBadge {
   @@map("user_badge")
 }
 
+model Follow {
+  idfollow     BigInt   @id @default(autoincrement())
+  follower_id  String
+  followed_id  String
+  createdat    DateTime? @default(now())
+
+  // Relazioni
+  follower Userdata @relation("FollowerRelation", fields: [follower_id], references: [user_id], onDelete: Cascade)
+  followed Userdata @relation("FollowedRelation", fields: [followed_id], references: [user_id], onDelete: Cascade)
+
+  @@unique([follower_id, followed_id], name: "unique_follow")
+  @@map("follow")
+}
+
 model Userdata {
   user_id        String  @id
   email          String
@@ -162,6 +176,8 @@ model Userdata {
   mentionNotifications Notification[] @relation("MentionAuthor")
   upvoteArticles UpvoteArticle[]
   upvoteComments UpvoteComment[]
+  followers Follow[] @relation("FollowerRelation")
+  following Follow[] @relation("FollowedRelation")
   badges         UserBadge[]
 
   @@map("userdata")
