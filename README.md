@@ -27,6 +27,7 @@ Currently, the project is at **40% development**, but it is already **functional
 - [x] User profile and stats
 - [ ] Advanced permissions/authorization management
 - [ ] Notifications and moderation system (Using AI)
+- [ ] Follow and Followers system
 - [x] Notification viewer
 - [ ] Performance and security optimization
 - [ ] Comments with Markdown support
@@ -69,6 +70,7 @@ Attualmente il progetto è al **40% dello sviluppo**, ma è già **funzionante**
 - [x] Profilo utente e statistiche
 - [ ] Gestione avanzata permessi/autorizzazioni
 - [ ] Notifiche e sistema di moderazione (con AI)
+- [ ] Sistema di Follow e Followers
 - [x] Visualizzatore notifiche
 - [ ] Ottimizzazione performance e sicurezza
 - [ ] Commenti con supporto Markdown
