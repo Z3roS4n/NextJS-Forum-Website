@@ -86,4 +86,22 @@ Attualmente il progetto è al **40% dello sviluppo**, ma è già **funzionante**
 
 ---
 
+## 🛠️ TODO e Miglioramenti Consigliati
+
+- [ ] Validazione input lato API (es. Zod/Joi)
+- [ ] Rate limiting e protezione anti-spam sulle API
+- [ ] Gestione errori strutturata e logging avanzato (es. Sentry)
+- [ ] Refactoring componenti React troppo grandi in componenti più piccoli e custom hooks
+- [ ] Migliorare accessibilità (A11y): aria-label, focus management, semantic HTML
+- [ ] Loading states e skeletons per una UX più fluida
+- [ ] Ottimizzazione query Prisma per evitare N+1 e migliorare performance
+- [ ] Caching server-side (es. Redis) e ottimizzazione caching client
+- [ ] SEO avanzato: meta tag dinamici, Open Graph, sitemap
+- [ ] Real-time updates (WebSocket o Pusher) per notifiche e commenti live
+- [ ] Pipeline CI/CD per deploy automatico e test
+- [ ] Monitoring e analytics (es. Prometheus, Sentry, Posthog)
+- [ ] Migliorare la documentazione delle API e dei componenti
+
+---
+
 Per qualsiasi domanda o contributo, sentiti libero di aprire una issue o una pull request!
