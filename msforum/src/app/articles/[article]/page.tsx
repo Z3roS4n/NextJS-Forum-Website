@@ -1,4 +1,3 @@
-
 import ArticleViewer from "@/components/articles/articleViewer";
 import CommentHandler from "@/components/articles/commentsHandler";
 import { Article_Category_Author, Comment_Author_Subscription } from "@/types/components";
@@ -32,6 +31,26 @@ const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }
             </div>
         </>
     );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ article: string }> }) {
+    const { article } = await params;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles?idart=${article}`, {
+        next: { revalidate: 120 }
+    });
+    const articles: Article_Category_Author[] = await res.json();
+    const artData = articles[0];
+
+    return {
+        title: (artData?.title || "Article") + " | MSForum",
+        description: artData?.content || "Read this article on our forum.",
+        openGraph: {
+            title: artData?.title,
+            description: artData?.content,
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/articles/${article}`,
+            type: "article"
+        }
+    };
 }
 
 export default ArticlePage;

@@ -7,7 +7,9 @@ import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import LoadingComponent from "./Loading";
 
 interface NotifDropdownParams {
     type?: 'notifications';
@@ -59,7 +61,6 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
             await queryClient.cancelQueries({ queryKey: [type, user?.id] });
             const prevData = queryClient.getQueryData<User_Mention_Article_Notification[]>([type, user?.id]);
             
-            // Optimistic update
             if (prevData) {
                 const updatedData = prevData.map(notif =>
                     notif.idnotification === notifId
@@ -71,7 +72,6 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
             return { prevData };
         },
         onError: (_err, _notifId, context) => {
-            // Rollback on error
             if (context?.prevData)
                 queryClient.setQueryData([type, user?.id], context.prevData);
         },
@@ -82,7 +82,19 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
         }
     })
 
-    const [ toggle, setToggle ] = useState<boolean>(false)
+    const [ toggle, setToggle ] = useState<boolean>(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close on external click
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setToggle(false);
+            }
+        }
+        if (toggle) document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [toggle]);
 
     const notificationMessage = (type: string, article: string ) => {
         const original = NOTIFICATION[type][1];
@@ -104,42 +116,56 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
 
 
     return (
-        <>
-            <span className="items-center rounded-md text-xl">
-                <FontAwesomeIcon icon={faEnvelope} onMouseEnter={() => setToggle(true)} onMouseLeave={() => setTimeout(() => setToggle(false), 500)} /> 
+        <span className="relative items-center rounded-md text-xl">
+            <button
+                aria-label="Open notifications"
+                className="focus:outline-none"
+                onClick={() => setToggle((t) => !t)}
+            >
+                <FontAwesomeIcon icon={faEnvelope} />
+            </button>
 
-                <div className={"article-container flex-col fixed lg:right-45 max-h-100 overflow-y-auto w-90 gap-4 opacity-100 transition-opacity duration-150 " + (!toggle ? 'not-hover:hidden' : '')}>
-                    { isLoading ? <p>Notifications are loading...</p> : '' }
-                    { error ? <p>There was an error fetching your notification, try reloading the page!</p> : '' }
+            <AnimatePresence>
+                {toggle && (
+                    <motion.div
+                        ref={dropdownRef}
+                        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                        transition={{ duration: 0.18 }}
+                        className="z-50 fixed right-0 left-0 lg:right-30 mx-auto mt-4 lg:w-1/5 lg:left-auto bg-white shadow-xl rounded-2xl flex flex-col gap-4 overflow-y-auto p-4 border border-gray-200 w-9/10"
+                    >
+                        {isLoading && <LoadingComponent/>}
+                        {error && <p>There was an error fetching your notification, try reloading the page!</p>}
 
-                    { notifications && notifications.map((notification: User_Mention_Article_Notification, index) => (
-                        <>
-                            <div className="hover:bg-gray-100 rounded-xl p-2" key={index}>
-                                <div className="flex flex-row justify-between items-center">
-                                    <p className="font-bold text-[#2E3192]">{NOTIFICATION[notification.type][0]}</p>
-                                    <p className="text-sm">{notification.created_at.split('T')[0]}</p>
-                                </div>
-                                <div className="flex flex-col">
-                                    <p className="text-lg">{ notificationMessage(notification.type, notification.article?.title ?? "") }</p>
-                                </div>
-                                <div className="flex flex-row justify-between">
-                                    <span className={"text-sm link-primary " + (notification.seen ? "opacity-0" : "opacity-100")} onClick={() => markAsRead.mutate(notification.idnotification)}>Mark as read</span>
-                                    <Link href={`/articles/${notification.idart}`} className="text-sm self-end link-primary">Go to Article</Link>
+                        {notifications && notifications.map((notification: User_Mention_Article_Notification, index) => (
+                            <div className="flex gap-2" key={index}>
+                                <div className="hover:bg-gray-100 rounded-xl p-2 w-full">
+                                    <div className="flex flex-row justify-between items-center">
+                                        <p className="font-bold text-[#2E3192]">{NOTIFICATION[notification.type][0]}</p>
+                                        <p className="text-sm">{notification.created_at.split('T')[0]}</p>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <p className="text-lg">{ notificationMessage(notification.type, notification.article?.title ?? "") }</p>
+                                    </div>
+                                    <div className="flex flex-row justify-between">
+                                        <span className={"text-sm link-primary cursor-pointer transition-opacity " + (notification.seen ? "opacity-0" : "opacity-100")} onClick={() => markAsRead.mutate(notification.idnotification)}>Mark as read</span>
+                                        <Link href={`/articles/${notification.idart}`} className="text-sm self-end link-primary">Go to Article</Link>
+                                    </div>
                                 </div>
                             </div>
-                            <hr />
-                        </>
-                    ))}
+                        ))}
 
-                    <div className="flex flex-row justify-between items-center">
-                        <button className="btn-primary text-lg mr-4 disabled:opacity-0" disabled={true}>Prev</button>
-                        <p className="text-xl">1</p>
-                        <button className="btn-primary text-lg ml-4">Next</button>
-                    </div>
-                </div>
-            </span>
-        </>
-    )
+                        <div className="flex flex-row justify-between items-center mt-2">
+                            <button className="btn-primary text-lg mr-4 disabled:opacity-0" disabled={true}>Prev</button>
+                            <p className="text-xl">1</p>
+                            <button className="btn-primary text-lg ml-4">Next</button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </span>
+    );
 }
 
 export default NotifDropdownComponent;

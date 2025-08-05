@@ -11,7 +11,7 @@ export default async function Home() {
 
     return (
         <div className="page-container gap-4">
-            <h1 className="title">msforum by biton.dev</h1>
+            <h1 className="title">MSForum by biton.dev</h1>
             <p>Web App's homepage, here you can find last 10 published articles, users with most upvotes and a shortcut to your profile.</p>
             <div className="flex lg:flex-row flex-col lg:gap-2 not-lg:gap-4">
                 <div className="flex flex-col lg:w-2/3 w-1/1 border-0">
@@ -66,3 +66,8 @@ export default async function Home() {
         </div>
     );
 }
+
+export const metadata = {
+    title: "Home | MSForum",
+    description: "Homepage of msforum. Find the latest articles, top users, and your profile overview.",
+};

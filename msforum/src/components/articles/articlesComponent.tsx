@@ -4,19 +4,47 @@ import { Article_Category, Article_Category_Author, Category } from "@/types/com
 import Link from "next/link";
 import { useState } from "react";
 import SelectComponent from "../ui/select";
+import { useQuery } from "@tanstack/react-query";
+import LoadingComponent from "../ui/Loading";
 
 interface Params {
-    articles: Article_Category_Author[],
-    categories: Category[],
-    limitIndex?: number
+    user_id?: string;
+    limitIndex?: number;
 }
 
-const ArticlesComponent = ({articles, categories, limitIndex = 20}: Params) => {
+const ArticlesComponent = ({limitIndex = 20, user_id}: Params) => {
     const [ category, setCategory ] = useState<number>(0);
     const [ title, setTitle ] = useState<string>("");
     const [ pageIndex, setPageIndex ] = useState<number>(1);
 
-    const totalPagesNumber: number = Math.max(1, Math.ceil(articles.length / limitIndex));
+    const { data: articles, isLoading: articlesLoading } = useQuery<Article_Category_Author[]>({
+        queryKey: ['articles', user_id],
+        queryFn: async () => {
+            let queryParams = '';
+            if(user_id)
+                queryParams += `user_id=${user_id}`
+
+            const res = await fetch(`/api/articles?${queryParams}`);
+            if(!res.ok) throw new Error('Fetch Error!');
+            return res.json();
+        },
+        enabled: true,
+        gcTime: 1000 * 15,
+        staleTime: 1000 * 15
+    })
+
+    const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
+        queryKey: ['categories'],
+        queryFn: async () => {
+            const res = await fetch(`/api/manageArticle?action=getExistingCategories`);
+            if(!res.ok) throw new Error('Fetch Error!');
+            return res.json();
+        },
+        enabled: true,
+        gcTime: 1000 * 10,
+    })
+
+    const totalPagesNumber: number = Math.max(1, Math.ceil((articles?.length ?? 0) / limitIndex));
 
     const getVisibilityClass = (artCategory: number, artTitle: string, indexart: number) => {
         const hasCategoryFilter = category !== 0;
@@ -48,14 +76,10 @@ const ArticlesComponent = ({articles, categories, limitIndex = 20}: Params) => {
         return "";
     };
 
-
-    // TO BE IMPLEMENTED: Divide articles in pages containing 20 articles (every page loads all articles [FOR FAST SEARCH FUNCTION],
-    // but shows at interval of 20s only [0 - 20, 21 - 40, 41 - 60]); others will be *hidden* by the hidden class, such as filters.
-
     return (
         <>
             <div className="flex flex-col lg:flex-row gap-6">
-                <SelectComponent categories={categories} onCategorySelection={(categoryId) => setCategory(categoryId)}/>
+                <SelectComponent categories={categories ?? []} onCategorySelection={(categoryId) => setCategory(categoryId)}/>
                 <div>
                     <label htmlFor="titleSearch">Search by Title</label>
                     <input className="input ml-2" type="text" name="search" id="titleSearch" onChange={(e) => setTitle(e.target.value)} />
@@ -63,7 +87,7 @@ const ArticlesComponent = ({articles, categories, limitIndex = 20}: Params) => {
             </div>
 
             <div className="flex flex-col gap-2">
-                {articles.map((article: Article_Category_Author, index) => 
+                {articles ? articles.map((article: Article_Category_Author, index) => 
                     <div key={article.idart} className={"article-container flex-col " + getVisibilityClass(article.idcat ?? 0, article.title, index ?? 0) }>
                         <h2 className="font-bold text-xl overflow-hidden text-ellipsis">{article.title}</h2>
                         <p>Author: <Link className="link-primary" href={`/profile/${article.author.user_id}`}>{article.author.username}</Link></p>
@@ -73,7 +97,7 @@ const ArticlesComponent = ({articles, categories, limitIndex = 20}: Params) => {
                             <a href={`/articles/${article.idart}`}>Read Article</a>
                         </div>
                     </div>
-                )}
+                ) : <LoadingComponent/> }
             </div>
 
             <div className="flex flex-row justify-center items-center">

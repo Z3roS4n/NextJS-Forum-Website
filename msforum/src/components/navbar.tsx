@@ -29,15 +29,8 @@ const NavBar = () => {
                     <Image className="rounded-2xl ml-3" src={user.imageUrl ?? "/default-profile.png"} alt="Profile" width={30} height={30} />
                     : <p>N.D.</p>}
                     </Link>*/}
-                    <div className="flex flex-row gap-4">
+                    <div className="flex flex-row gap-4 items-center">
                         <NotifDropdownComponent/>
-                        <span className="items-center rounded-md text-xl">
-                            <FontAwesomeIcon icon={faQuoteLeft} />
-                            {/*
-                                TanStack Query to `/api/mentions/retrieve?user_id=${userInfo.user_id}`,
-                                poi apre con un dropdown le mentions (con scroll controllato, solo ultime 30) 
-                            */}
-                        </span>
                         <UserButton userProfileUrl="/profile" showName></UserButton>  
                     </div>
 

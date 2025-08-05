@@ -4,6 +4,7 @@ import { UserStatsFunctionResponse } from "@/types/api";
 import { useUser, SignedIn } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react"
+import UserStats from "../profile/other-user/userstats";
 
 const YourProfile = () => {
     const { user } = useUser();
@@ -21,7 +22,7 @@ const YourProfile = () => {
 
     return (
         <> 
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-4">
                 <SignedIn>
                     <div className="flex flex-row justify-around items-end text-sm text-gray-700 leading-1 gap-3">
                         <div className="flex flex-col mt-6">
@@ -33,20 +34,7 @@ const YourProfile = () => {
                             <span className="font-medium text-lg">{stats?.user.subscription?.name ?? "Starter User"}</span>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-2">
-                        <div className="rounded-xl border p-4 text-center bg-white shadow-sm w-1/3">
-                            <div className="text-sm font-semibold text-gray-700">Articles</div>
-                            <div className="text-xl font-bold text-black">{stats?.articlesPublished || 0}</div>
-                        </div>
-                        <div className="rounded-xl border p-4 text-center bg-white shadow-sm w-1/3">
-                            <div className="text-sm font-semibold text-gray-700">Comments</div>
-                            <div className="text-xl font-bold text-black">{stats?.commentsWritten || 0}</div>
-                        </div>
-                        <div className="rounded-xl border p-4 text-center bg-white shadow-sm w-1/3">
-                            <div className="text-sm font-semibold text-gray-700">Upvotes</div>
-                            <div className="text-xl font-bold text-black">{stats?.totalUpvotesReceived || 0}</div>
-                        </div>
-                    </div>
+                    {user?.id && <UserStats user_id={user.id} />}
                 </SignedIn>
             </div>
         </>

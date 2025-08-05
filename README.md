@@ -93,10 +93,11 @@ Attualmente il progetto è al **40% dello sviluppo**, ma è già **funzionante**
 - [ ] Gestione errori strutturata e logging avanzato (es. Sentry)
 - [ ] Refactoring componenti React troppo grandi in componenti più piccoli e custom hooks
 - [ ] Migliorare accessibilità (A11y): aria-label, focus management, semantic HTML
-- [ ] Loading states e skeletons per una UX più fluida
+- [x] Loading states e skeletons per una UX più fluida
 - [ ] Ottimizzazione query Prisma per evitare N+1 e migliorare performance
 - [ ] Caching server-side (es. Redis) e ottimizzazione caching client
-- [ ] SEO avanzato: meta tag dinamici, Open Graph, sitemap
+- [x] SEO avanzato: meta tag dinamici
+- [ ] SEO: Sitemap
 - [ ] Real-time updates (WebSocket o Pusher) per notifiche e commenti live
 - [ ] Pipeline CI/CD per deploy automatico e test
 - [ ] Monitoring e analytics (es. Prometheus, Sentry, Posthog)

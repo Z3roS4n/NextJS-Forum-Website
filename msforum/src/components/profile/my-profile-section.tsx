@@ -13,6 +13,7 @@ import { Category } from "@/generated/prisma";
 import ArticlesComponent from "../articles/articlesComponent";
 import { useError } from "@/app/context/ErrorContext";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import LoadingComponent from "../ui/Loading";
 
 interface MyProfileSectionParams {
     userInfo: Author_Subscription;
@@ -33,28 +34,6 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
     const [UserBio, setUserBio] = useState<string>(userInfo.bio);
     const [Username, setUsername] = useState<string>(userInfo.username);
     
-    const { data: Articles, isPending: loadingArticles, error: errorArticles } = useQuery<Article_Category_Author[]>({
-        queryKey: ['articles', userInfo.user_id],
-        queryFn: async () => {
-            const res = await fetch(`/api/articles?user_id=${userInfo.user_id}`, {
-                next: { revalidate: 30 },
-            });
-            if (!res.ok) throw new Error('Errore articoli');
-            return res.json();
-        },
-        enabled: !!userInfo.user_id,
-    });
-
-    const { data: Categories, isPending: loadingCategories, error: errorCategories } = useQuery<Category[]>({
-        queryKey: ['categories'],
-        queryFn: async () => {
-            const res = await fetch(`/api/manageArticle?action=getExistingCategories`, {
-                next: { revalidate: 120 },
-            });
-            if (!res.ok) throw new Error('Errore categorie');
-            return res.json();
-        },
-    });
 
     const postUserChanges = async (action: string) => {
         try {
@@ -137,30 +116,41 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                     <h1 className="font-bold text-xl self-center">Profile Preview</h1>
                                     <div className="flex flex-row justify-center items-center gap-10 mt-4">
                                         <Image className="rounded-full" src={userInfo.profile_picture ?? '/default.jpg'} alt={"profile-image"} width={200} height={200}></Image>
-                                    </div>                            
+                                    </div>                    
                                     <div className="flex flex-col justify-center">
-                                        <div className="flex flex-col mt-4 justify-center items-center">
-                                            <span className="block text-gray-500">Username</span>
-                                            <span className="font-medium text-lg">{userInfo.username}</span>
-                                            <span className="block text-gray-500">Subscription</span>
-                                            <span className="font-medium text-lg">{userInfo.subscription?.name ?? "Starter User"}</span>
-                                            <span className="block text-gray-500">Bio</span>
-                                            <span className="font-medium text-lg text-wrap">{userInfo.bio}</span> 
+                                        <div className="flex flex-col justify-center gap-2">
+                                            <div className="flex flex-row items-center justify-around">
+                                                <div className="flex flex-col items-center">
+                                                    <span className="block text-gray-500">Username</span>
+                                                    <span className="font-medium text-lg">{userInfo.username}</span>   
+                                                </div>
+                                                <div className="flex flex-col items-center">
+                                                    <span className="block text-gray-500">Subscription</span>
+                                                    <span className="font-medium text-lg">{userInfo.subscription?.name ?? "Starter User"}</span> 
+                                                </div>
+                                            </div>
+                                            <div className="self-center flex flex-col items-center">
+                                                <span className="block text-gray-500">Something about {userInfo.username}...</span>
+                                                <span className="font-medium text-lg text-wrap break-all text-center">{userInfo.bio}</span>   
+                                            </div>
                                         </div>
-                                    </div>                                
-                                    <div className="flex gap-2">
+                                    </div>                               
+                                    <div>
                                         <UserStats user_id={userInfo.user_id}></UserStats>
                                     </div>
                                 </div>
                                 <div className="article-container flex flex-col gap-2 lg:w-2/5 w-1/1">
                                     <div className="flex flex-col gap-2 w-1/1">
-                                        <div className="flex flex-col w-1/1">
-                                            <label htmlFor="set-username" className="font-bold text-lg">Username</label>
-                                            <input id="set-username" defaultValue={Username} onChange={(e) => setUsername(e.target.value)} className="input lg:w-1/1" maxLength={128}/>
-                                        </div>
-                                        <div className="flex flex-col w-1/1">
-                                            <label htmlFor="set-username" className="font-bold text-lg">Email Address</label>
-                                            <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128} readOnly/>
+
+                                        <div className="flex lg:flex-row flex-col gap-2">
+                                            <div className="flex flex-col w-1/1">
+                                                <label htmlFor="set-username" className="font-bold text-lg">Username</label>
+                                                <input id="set-username" defaultValue={Username} onChange={(e) => setUsername(e.target.value)} className="input lg:w-1/1" maxLength={128}/>
+                                            </div>
+                                            <div className="flex flex-col w-1/1">
+                                                <label htmlFor="set-username" className="font-bold text-lg">Email Address</label>
+                                                <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128} readOnly/>
+                                            </div>  
                                         </div>
                                         <div className="flex flex-col w-1/1">
                                             <label htmlFor="set-userbio" className="font-bold text-lg">Your Bio</label>
@@ -172,7 +162,7 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                         <button onClick={handleSaveEdits} disabled={detectChanges() ? false : true} className="btn-primary lg:w-1/4 w-1/1 button-disabled">Save edits</button>
                                     </div>
                                 </div>
-                                <div className="article-container flex flex-col lg:w-2/5 overflow-auto max-h-140">
+                                <div className="article-container flex flex-col lg:w-2/5 overflow-auto max-h-170">
                                     <h1 className="font-bold text-xl self-center">Readme Preview</h1>
                                     <ReadMeViewer content={userInfo.readme}></ReadMeViewer>
                                 </div>
@@ -211,11 +201,7 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
 
                             <div hidden={!selectedSection("articles")} className="w-1/1">
                                 <div className="article-container flex-col gap-2 w-1/1">
-                                    { errorArticles || errorCategories ? <div>Errore nel caricamento</div> : '' }
-                                    { 
-                                        loadingArticles || loadingCategories ? <div>Loading...</div>
-                                        : <ArticlesComponent articles={Articles || []} categories={(Categories || []).map(cat => ({ ...cat, description: cat.description ?? "" }))} limitIndex={5}/>
-                                    }
+                                    <ArticlesComponent limitIndex={5} user_id={userInfo.user_id}/>
                                 </div>
                             </div>
 
