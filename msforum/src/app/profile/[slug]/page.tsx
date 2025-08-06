@@ -1,6 +1,7 @@
 "use client"
 
 import ArticlesComponent from "@/components/articles/articlesComponent";
+import FollowComponent from "@/components/profile/other-user/follow";
 
 import ReadMeViewer from "@/components/profile/other-user/readmeviewer";
 import UserStats from "@/components/profile/other-user/userstats";
@@ -30,9 +31,9 @@ export default function ProfilesPage() {
         <>
             <div className="page-container">
                 <div className="flex lg:flex-row flex-col lg:gap-2">
-                    <div className="article-container lg:w-1/5 w-1/1 max-h-160">
+                    <div className="article-container lg:w-1/5 w-1/1 max-h-180">
                         { !userInfo ? <LoadingComponent/> :
-                            <div id="user-info" className="flex flex-col items-center justify-center w-1/1 gap-2">
+                            <div id="user-info" className="flex flex-col items-center justify-center w-1/1 gap-3">
                                 <h1 className="title self-start">Informations</h1>
                                 <div className="flex flex-row items-start gap-10 mt-4">
                                     <Image className="rounded-full" src={userInfo.profile_picture ?? '/default-profile-img.png'} alt={"profile-image"} width={200} height={200}></Image>
@@ -56,6 +57,9 @@ export default function ProfilesPage() {
                                         </div>
                                     </div>
                                 </div>  
+                                <div className="w-1/1 flex flex-row justify-center">
+                                    <FollowComponent btnClassName="w-2/3" user_id={slug}/> 
+                                </div>
                                 <div className="flex flex-row gap-2">
                                     <UserStats user_id={slug}></UserStats>
                                 </div>
@@ -64,7 +68,7 @@ export default function ProfilesPage() {
                         <div id="user-readme"></div>
 
                     </div>
-                    <div className="article-container lg:w-4/5 w-1/1 overflow-auto max-h-160">
+                    <div className="article-container lg:w-4/5 w-1/1 overflow-auto max-h-180">
                         <div>
                             <h1 className="title">Read me</h1>
                             { !userInfo ? <LoadingComponent/> :

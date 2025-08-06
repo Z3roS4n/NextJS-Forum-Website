@@ -14,6 +14,7 @@ import { UpvoteComment } from "@/generated/prisma";
 
 import { faCircleUp, faCircleDown, faReply, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LoadingComponent from "../ui/Loading";
 
 const CommentHandler = () => {
     const { article }  = useParams()
@@ -165,18 +166,20 @@ const CommentHandler = () => {
             <h1 className="title">Comments ({comments?.length ?? '0'})</h1>
             {
                 user?.id ? //load this component only if user is logged in.
-                    <div className="w-1/2">
+                    <div className="lg:w-1/2 w-1/1">
                         <CommentWriter onSubmit={() => router.refresh()}/> 
                     </div>
                     : ""
             }
 
             {
-                !comments ? <p>Comments are loading...</p> : 
+                !comments ? <LoadingComponent/> : 
                     comments.map((comment, index) => { 
-                        const upvote = upvotes?.find(u => u.idcomment === comment.idcomment)
                         const replies = showReplies[comment.idcomment];
                         const writer = replyWriter[comment.idcomment];
+
+                        const upvote = upvotes?.find(u => u.idcomment === comment.idcomment)
+                        const replyComments = comments.filter(c => c.reply_to === comment.idcomment);
                         
                         if(!comment.reply_to)
                             return (
@@ -193,18 +196,17 @@ const CommentHandler = () => {
                                             className={"font-bold hover:bg-blue-200 hover:text-blue-700 rounded-xl p-1 transition-colors duration-300 " + (writer ? 'bg-blue-200 text-blue-700' : '')}>
                                             <FontAwesomeIcon icon={faReply}></FontAwesomeIcon> Reply
                                         </p>
-                                            <p onClick={() => toggleShowReplies(comment.idcomment)}
+                                        { (replyComments.length > 0) ? <p onClick={() => toggleShowReplies(comment.idcomment)}
                                             className={"font-bold hover:bg-purple-200 hover:text-purple-700 rounded-xl p-1 transition-colors duration-300 " + (replies ? 'bg-purple-200 text-purple-700' : '')}>
-                                            <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon> Replies ({0})
-                                        </p>
+                                            <FontAwesomeIcon icon={faCommentDots}></FontAwesomeIcon> Replies ({replyComments.length})
+                                        </p> : '' }
                                     </div>
                                     { writer ? <CommentWriter action="reply" reply_to={comment.idcomment} onSubmit={() => router.refresh()}></CommentWriter> : ''}
                                     { replies ?
                                         <div className="flex-col gap-2 w-1/1">
-                                            {comments.map((reply, index) => {
+                                            {replyComments.map((reply, index) => {
                                                 const upvote_reply = upvotes?.find(u => u.idcomment === reply.idcomment)
 
-                                                if(reply.reply_to == comment.idcomment)
                                                 return (                         
                                                     <div className={"article-container flex-col gap-1 lg:w-1/1"} key={index}>
                                                         <Link href={!checkLogged(reply.author.user_id) ? `/profile/${reply.user_id}` : "/profile"} className="font-bold text-lg text-ellipsis">{!checkLogged(reply.author.user_id) ? reply.author?.username ?? reply.author.user_id : "You"} - {reply.author?.subscription?.name ?? "Starter User"}</Link>
