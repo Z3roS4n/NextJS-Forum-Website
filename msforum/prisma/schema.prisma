@@ -144,7 +144,7 @@ model UserBadge {
 }
 
 model Follow {
-  idfollow     BigInt   @id @default(autoincrement())
+  idfollow     Int   @id @default(autoincrement())
   follower_id  String
   followed_id  String
   createdat    DateTime? @default(now())

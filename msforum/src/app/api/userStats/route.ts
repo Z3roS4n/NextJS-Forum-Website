@@ -62,6 +62,15 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
         0
     );
 
+    // Integra il conteggio dei follower e dei seguiti nella stessa query
+    const followersCount = await prisma.follow.count({
+        where: { followed_id: userId }
+    });
+
+    const followingCount = await prisma.follow.count({
+        where: { follower_id: userId }
+    });
+
     return {
         user: {
             user_id: userInfo.user_id,
@@ -75,5 +84,6 @@ const userStats = async (userId: string): Promise<UserStatsFunctionResponse> => 
         articlesPublished: userInfo._count.articles,
         commentsWritten: userInfo._count.comments,
         totalUpvotesReceived,
+        followers: followersCount
     };
 };

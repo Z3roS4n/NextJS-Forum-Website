@@ -37,10 +37,8 @@ export interface Verification {
 }
 
 export interface Follow {
-    idfollow: number;
-    follower: User;
-    followed: User;
-    created_at: string;
+    followers: User[];
+    followed: User[];
 }
 
 export interface User {

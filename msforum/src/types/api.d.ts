@@ -12,7 +12,7 @@ export interface PostUserInformations {
 export interface PostFollow {
     action: 'follow' | 'unfollow'
     data: {
-        follower: string;
+        follower?: string;
         followed: string;
     }
 }
@@ -49,6 +49,7 @@ export interface UserStatsFunctionResponse {
     articlesPublished: number;
     commentsWritten: number;
     totalUpvotesReceived: number;
+    followers: number;
 }
 
 export interface TopUsersResponse {

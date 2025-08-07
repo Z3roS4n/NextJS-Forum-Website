@@ -1,5 +1,6 @@
 "use client"
 
+import { useUser } from "@clerk/nextjs";
 import ArticlesComponent from "@/components/articles/articlesComponent";
 import FollowComponent from "@/components/profile/other-user/follow";
 
