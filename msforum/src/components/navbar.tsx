@@ -6,7 +6,7 @@ import { SignedIn, SignedOut, useUser, UserButton } from "@clerk/nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 import { useError } from "@/app/context/ErrorContext";
-import NotifDropdownComponent from "./ui/notifDropdown";
+import NotifDropdownComponent from "./notifications/notifDropdown";
 
 const NavBar = () => {
     const { isLoaded, isSignedIn, user} = useUser();

@@ -14,7 +14,7 @@ import { UpvoteComment } from "@/generated/prisma";
 
 import { faCircleUp, faCircleDown, faReply, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoadingComponent from "../ui/Loading";
+import LoadingComponent from "../ui/loading";
 
 const CommentHandler = () => {
     const { article }  = useParams()

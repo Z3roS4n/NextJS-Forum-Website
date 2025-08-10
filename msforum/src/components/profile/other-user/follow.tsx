@@ -64,20 +64,22 @@ const FollowComponent = ({ user_id, btnClassName, onUpdate }: FollowParams) => {
 
     return (
         <>
-            <button
-                className={`${isFollowing() ? "btn-secondary" : "btn-primary"} ${btnClassName}`}
-                disabled={availableAction()[1]}
-                onClick={() => {
-                    followUser.mutate({
-                        action: isFollowing() ? "unfollow" : "follow",
-                        data: {
-                            followed: user_id
-                        }
-                    });
-                }}
-            >
-                {availableAction()[0]}
-            </button>
+            { !user?.id ? 
+                <button
+                    className={`${isFollowing() ? "btn-secondary" : "btn-primary"} ${btnClassName}`}
+                    disabled={availableAction()[1]}
+                    onClick={() => {
+                        followUser.mutate({
+                            action: isFollowing() ? "unfollow" : "follow",
+                            data: {
+                                followed: user_id
+                            }
+                        });
+                    }}
+                >
+                    {availableAction()[0]}
+                </button> : ''
+            }
         </>
     )
 }

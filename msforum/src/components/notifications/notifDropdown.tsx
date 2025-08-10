@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import LoadingComponent from "./Loading";
+import LoadingComponent from "../ui/loading";
 
 interface NotifDropdownParams {
     type?: 'notifications';

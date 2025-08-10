@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 
 interface UserStatsParams {
-    content: string
+    content: string;
 }
 
 const ReadMeViewer = ({ content }: UserStatsParams) => {

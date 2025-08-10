@@ -13,7 +13,11 @@ import { Category } from "@/generated/prisma";
 import ArticlesComponent from "../articles/articlesComponent";
 import { useError } from "@/app/context/ErrorContext";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import LoadingComponent from "../ui/Loading";
+import LoadingComponent from "../ui/loading";
+import LabeledText from "../ui/labeledText";
+import Input from "../ui/input";
+import InputComponent from "../ui/input";
+
 
 interface MyProfileSectionParams {
     userInfo: Author_Subscription;
@@ -116,46 +120,29 @@ const MyProfileSection = ({ userInfo, section }: MyProfileSectionParams) => {
                                     <h1 className="font-bold text-xl self-center">Profile Preview</h1>
                                     <div className="flex flex-row justify-center items-center gap-10 mt-4">
                                         <Image className="rounded-full" src={userInfo.profile_picture ?? '/default.jpg'} alt={"profile-image"} width={200} height={200}></Image>
-                                    </div>                    
+                                    </div>    
+
                                     <div className="flex flex-col justify-center">
                                         <div className="flex flex-col justify-center gap-2">
                                             <div className="flex flex-row items-center justify-around">
-                                                <div className="flex flex-col items-center">
-                                                    <span className="block text-gray-500">Username</span>
-                                                    <span className="font-medium text-lg">{userInfo.username}</span>   
-                                                </div>
-                                                <div className="flex flex-col items-center">
-                                                    <span className="block text-gray-500">Subscription</span>
-                                                    <span className="font-medium text-lg">{userInfo.subscription?.name ?? "Starter User"}</span> 
-                                                </div>
+                                                <LabeledText head={'Username'}>{userInfo.username}</LabeledText>
+                                                <LabeledText head={'Subscription'}>{userInfo.subscription?.name ?? "Starter User"}</LabeledText>
                                             </div>
-                                            <div className="self-center flex flex-col items-center">
-                                                <span className="block text-gray-500">Something about {userInfo.username}...</span>
-                                                <span className="font-medium text-lg text-wrap break-all text-center">{userInfo.bio}</span>   
-                                            </div>
+                                            <LabeledText head={`Something about ${userInfo.username}...`}>{userInfo.bio}</LabeledText>
                                         </div>
-                                    </div>                               
+                                    </div>          
+
                                     <div>
                                         <UserStats user_id={userInfo.user_id}></UserStats>
                                     </div>
                                 </div>
                                 <div className="article-container flex flex-col gap-2 lg:w-2/5 w-1/1">
                                     <div className="flex flex-col gap-2 w-1/1">
-
                                         <div className="flex lg:flex-row flex-col gap-2">
-                                            <div className="flex flex-col w-1/1">
-                                                <label htmlFor="set-username" className="font-bold text-lg">Username</label>
-                                                <input id="set-username" defaultValue={Username} onChange={(e) => setUsername(e.target.value)} className="input lg:w-1/1" maxLength={128}/>
-                                            </div>
-                                            <div className="flex flex-col w-1/1">
-                                                <label htmlFor="set-username" className="font-bold text-lg">Email Address</label>
-                                                <input id="set-username" value={userInfo.email} className="input lg:w-1/1" maxLength={128} readOnly/>
-                                            </div>  
-                                        </div>
-                                        <div className="flex flex-col w-1/1">
-                                            <label htmlFor="set-userbio" className="font-bold text-lg">Your Bio</label>
-                                            <textarea id="set-userbio" defaultValue={UserBio} onChange={(e) => setUserBio(e.target.value)} className="input lg:w-1/1 resize-none h-30" maxLength={128}/>
-                                        </div>   
+                                            <InputComponent label="Username" default={Username} onChange={(e) => setUsername(e.target.value)} maxLength={64}></InputComponent>
+                                            <InputComponent label="Email Address" default={userInfo.email} readOnly></InputComponent>
+                                        </div> 
+                                        <InputComponent label="Your Bio(logical life-form)" type="textarea" default={UserBio} onChange={(e) => setUserBio(e.target.value)} maxLength={128}></InputComponent>
                                     </div>
 
                                     <div className="w-1/1">
