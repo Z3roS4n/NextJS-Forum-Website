@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 export const setError = ( code: number, message?: string) => {
     if(code == 500)
         message = "Internal Server Error.";
+    if(code = 404)
+        message = "Bad Request.";
 
     return NextResponse.json({ error: message }, { status: code })
 }

@@ -1,107 +1,77 @@
 import { PrismaPromise } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { userQuery } from "../user/route";
+import { settings } from "@/lib/defaultSiteSettings";
+
+export const articlesQuery = {
+    idart: true,
+    idcat: true,
+    title: true,
+    content: true,
+    user_id: true,
+    datetime: true,
+    category: {
+        select: {
+            idcat: true,
+            name: true,
+            description: true,
+        },
+    },
+    author: {
+        select: userQuery,
+    }
+}
 
 export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
-        const category_id = searchParams.get("idcat");
-        const idcatNumber = category_id ? Number(category_id) : undefined;
-        const idart = searchParams.get("idart");
-        const idartParsed = idart ? Number(idart) : undefined;
-        const user_id = searchParams.get("user_id");
+
+        const page: number = parseInt(searchParams.get("pageNumber") || "0");
+        const pageSize: number = parseInt(searchParams.get("pageSize") || String(settings.pageSize));
+        const legacy: boolean = Boolean(searchParams.get("legacy")) || false;
+
+        const category_id: number = parseInt(searchParams.get("categoryId") || String(settings.noCategory));
+        const user_id: string | undefined = searchParams.get("user_id") || undefined;
 
         const recordsLimit = searchParams.get("limit") || null;
-        let retrieveArticle;
 
-        if(idart) 
-            retrieveArticle = await prisma.article.findMany({
-                where: {
-                    idart: idartParsed,
-                },
-                select: {
-                    idart: true,
-                    idcat: true,
-                    title: true,
-                    content: true,
-                    user_id: true,
-                    datetime: true,
-                    category: {
-                        select: {
-                            idcat: true,
-                            name: true,
-                            description: true
-                        }, 
+        let retrieveArticles;
+        const skip = (page - 1) * pageSize; //query page skip
+
+        if(!legacy)
+            // If either user_id is provided or a specific category is selected, use paginated query
+            if (user_id || (category_id !== settings.noCategory && category_id !== 0)) {
+                retrieveArticles = await prisma.article.findMany({
+                    where: {
+                        user_id: user_id,
+                        idcat: category_id !== settings.noCategory && category_id !== 0 ? category_id : undefined,
                     },
-                    author: {
-                        select: {
-                            user_id: true,
-                            username: true,
-                            email: true
-                        }
-                    }
-                }
-            });
-        else if(user_id)
-            retrieveArticle = await prisma.article.findMany({
-                where: {
-                    user_id: user_id,
-                },
-                select: {
-                    idart: true,
-                    idcat: true,
-                    title: true,
-                    content: true,
-                    user_id: true,
-                    datetime: true,
-                    category: {
-                        select: {
-                            idcat: true,
-                            name: true,
-                            description: true
-                        }, 
-                    },
-                    author: {
-                        select: {
-                            user_id: true,
-                            username: true,
-                            email: true
-                        }
-                    }
-                },
-                orderBy: [
-                    { datetime: 'desc' }
-                ]
-            });
+                    select: articlesQuery,
+                    orderBy: [{ datetime: 'desc' }],
+                    take: pageSize,
+                    skip: skip,
+                });
+            } else {
+                // Otherwise, use the limited query (e.g., for homepage or all categories)
+                retrieveArticles = await prisma.article.findMany({
+                    select: articlesQuery,
+                    orderBy: [{ datetime: 'desc' }],
+                    take: recordsLimit ? parseInt(recordsLimit, 10) : pageSize,
+                    skip: skip,
+                });
+            }
+
         else
-            retrieveArticle = await prisma.article.findMany({
-                select: {
-                    idart: true,
-                    idcat: true,
-                    title: true,
-                    content: true,
-                    user_id: true,
-                    datetime: true,
-                    category: {
-                        select: {
-                            idcat: true,
-                            name: true,
-                            description: true,
-                        },
-                    },
-                    author: {
-                        select: {
-                            user_id: true,
-                            username: true,
-                            profile_picture: true,
-                        }
-                    }
-                },
-                orderBy: [{ datetime: 'desc' }],
-                take: recordsLimit ? parseInt(recordsLimit, 10) : undefined,
-            });
-
-        return NextResponse.json(retrieveArticle)
+            if((!page && !category_id)) {
+                retrieveArticles = await prisma.article.findMany({
+                    select: articlesQuery,
+                    orderBy: [{ datetime: 'desc' }],
+                    take: recordsLimit ? parseInt(recordsLimit, 10) : pageSize,
+                });
+            }
+    
+        return NextResponse.json(retrieveArticles)
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

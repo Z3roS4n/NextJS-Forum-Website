@@ -7,7 +7,7 @@ const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }
     const { article } = await params;
 
     const [article_req] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles?idart=${article}`, {
+        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles/${article}`, {
             next: { revalidate: 120 } 
         })
     ]);
