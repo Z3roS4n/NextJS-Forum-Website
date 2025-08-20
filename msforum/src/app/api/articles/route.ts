@@ -27,12 +27,13 @@ export async function GET(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
 
-        const page: number = parseInt(searchParams.get("pageNumber") || "0");
+        const page: number = parseInt(searchParams.get("pageNumber") || "1");
         const pageSize: number = parseInt(searchParams.get("pageSize") || String(settings.pageSize));
         const legacy: boolean = Boolean(searchParams.get("legacy")) || false;
 
         const category_id: number = parseInt(searchParams.get("categoryId") || String(settings.noCategory));
         const user_id: string | undefined = searchParams.get("user_id") || undefined;
+        const searchedTitle: string | undefined = searchParams.get("searchedTitle") || undefined;
 
         const recordsLimit = searchParams.get("limit") || null;
 
@@ -41,11 +42,15 @@ export async function GET(req: NextRequest) {
 
         if(!legacy)
             // If either user_id is provided or a specific category is selected, use paginated query
-            if (user_id || (category_id !== settings.noCategory && category_id !== 0)) {
+            if (user_id || (category_id !== settings.noCategory && category_id !== 0) || searchedTitle) {
                 retrieveArticles = await prisma.article.findMany({
                     where: {
                         user_id: user_id,
                         idcat: category_id !== settings.noCategory && category_id !== 0 ? category_id : undefined,
+                        title: {
+                            contains: searchedTitle,
+                            mode: "insensitive"
+                        },
                     },
                     select: articlesQuery,
                     orderBy: [{ datetime: 'desc' }],

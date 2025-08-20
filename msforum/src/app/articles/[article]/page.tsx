@@ -1,18 +1,14 @@
 import ArticleViewer from "@/components/articles/articleViewer";
 import CommentHandler from "@/components/articles/commentsHandler";
+import ApiRequest from "@/lib/apiRequest";
 import { Article_Category_Author, Comment_Author_Subscription } from "@/types/components";
 import Link from "next/link";
 
 const ArticlePage = async ({ params }: { params: Promise<{ article: string }>; }) => {
     const { article } = await params;
 
-    const [article_req] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles/${article}`, {
-            next: { revalidate: 120 } 
-        })
-    ]);
-    const art_res_json: Article_Category_Author[] = await article_req.json();
-    const artData: Article_Category_Author = art_res_json[0];
+    const article_req: Article_Category_Author[] = await ApiRequest.getData({ url: `${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/articles/${article}` });
+    const artData: Article_Category_Author = article_req[0];
 
     return (
         <>

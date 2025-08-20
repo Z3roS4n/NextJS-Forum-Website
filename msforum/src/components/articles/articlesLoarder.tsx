@@ -3,10 +3,13 @@
 import { settings } from "@/lib/defaultSiteSettings";
 import { Article_Category_Author, Category } from "@/types/components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LoadingComponent from "../ui/loading";
 import Link from "next/link";
 import SelectComponent from "../ui/select";
+import WindowActions from "@/lib/windowActions";
+import { useDebounce } from "@/hooks/useDebounce";
+import ApiRequest from "@/lib/apiRequest";
 
 interface ArticlesLoaderParams {
     user_id?: number;
@@ -17,43 +20,41 @@ const ArticlesLoader = ({ user_id, limit }: ArticlesLoaderParams) => {
     const [category, setCategory] = useState<number>(settings.noCategory);
     const [page, setPage] = useState<number>(1);
     const [title, setTitle] = useState<string>();
+    const [search, setSearch] = useState<string>();
+    const debouncedSearch = useDebounce(search, 1000);
 
     const queryClient = useQueryClient();
 
     const { data: categories, isLoading: categoriesLoading } = useQuery<Category[]>({
         queryKey: ['categories'],
         queryFn: async () => {
-            const res = await fetch(`/api/manageArticle?action=getExistingCategories`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
+            return await ApiRequest.getData({ url: '/api/manageArticle', params: { action: 'getExistingCategories' } });
         },
         enabled: true,
         gcTime: 1000 * 10,
     });
 
     const { data: articles, isLoading: articlesLoading } = useQuery<Article_Category_Author[]>({
-        queryKey: ['articles'],
+        queryKey: ['articles', category],
         queryFn: async () => {
-            const res = await fetch(`/api/articles?categoryId=${category}&pageNumber=${page}`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
+            return await ApiRequest.getData({ url: '/api/articles', params: { categoryId: category, pageNumber: page, searchedTitle: debouncedSearch } });
         },
         enabled: true,
         gcTime: 1000 * 10,
     })
 
     const articlesPageLoader = useMutation({
-        mutationFn: async ({ pageNumber, categoryId }: { pageNumber: number, categoryId: number }) => {
-            const res = await fetch(`/api/articles?categoryId=${categoryId}&pageNumber=${pageNumber}`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
+        mutationFn: async ({ pageNumber, categoryId, searchedTitle }: { pageNumber: number, categoryId: number, searchedTitle?: string }) => {
+            return await ApiRequest.getData({ url: '/api/articles', params: { categoryId: categoryId, pageNumber: pageNumber, searchedTitle: searchedTitle } });
         },
         onSuccess: async () => {
+            WindowActions.scrollToTop()
             queryClient.invalidateQueries({
-                queryKey: ['article_comments', 'upvotes']
+                queryKey: ['articles']
             });
         }
     })
+    const reloadPage = () => articlesPageLoader.mutate({ pageNumber: page, categoryId: category, searchedTitle: search });
 
     const setPageNumber = (action?: 'next' | 'prev', pageNumber?: number) => {
         let operation = () => action == 'next' ? page + 1 : page - 1;
@@ -65,8 +66,10 @@ const ArticlesLoader = ({ user_id, limit }: ArticlesLoaderParams) => {
             newPage = operation();
 
         setPage(newPage);
-        articlesPageLoader.mutate({ pageNumber: newPage, categoryId: category });
+        
     }
+
+    useEffect(reloadPage, [debouncedSearch, page, category])
 
     return (
         <>
@@ -74,7 +77,7 @@ const ArticlesLoader = ({ user_id, limit }: ArticlesLoaderParams) => {
                 <SelectComponent categories={categories ?? []} onCategorySelection={(categoryId) => setCategory(categoryId)}/>
                 <div>
                     <label htmlFor="titleSearch">Search by Title</label>
-                    <input className="input ml-2" type="text" name="search" id="titleSearch" onChange={(e) => setTitle(e.target.value)} />
+                    <input className="input ml-2" type="text" name="search" id="titleSearch" onChange={(e) => setSearch(e.target.value)} />
                 </div>
             </div>
             <div className="flex flex-col gap-2">

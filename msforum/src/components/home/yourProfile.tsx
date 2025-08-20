@@ -5,6 +5,7 @@ import { useUser, SignedIn } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react"
 import UserStats from "../profile/other-user/userstats";
+import ApiRequest from "@/lib/apiRequest";
 
 const YourProfile = () => {
     const { user } = useUser();
@@ -12,9 +13,7 @@ const YourProfile = () => {
     const { data: stats, isLoading, error } = useQuery<UserStatsFunctionResponse>({
         queryKey: ['user_stats'],
         queryFn: async () => {
-            const res = await fetch(`/api/userStats`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
+            return await ApiRequest.getData({ url: '/api/userStats' });
         },
         staleTime: 1000 * 10,
         gcTime: 1000 * 10,

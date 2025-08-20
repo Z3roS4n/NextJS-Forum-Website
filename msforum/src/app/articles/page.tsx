@@ -2,6 +2,8 @@ import ArticlesComponent from "@/components/articles/articlesComponent"
 import ArticlesLoader from "@/components/articles/articlesLoarder";
 import { Article_Category, Article_Category_Author, Category } from "@/types/components";
 
+//<ArticlesComponent limitIndex={10}></ArticlesComponent>
+
 const ArticlesPage = async () => {
     return (
         <>
@@ -12,8 +14,8 @@ const ArticlesPage = async () => {
                 </div>
                 
                 <div className="flex flex-col gap-4">
-                    <ArticlesComponent limitIndex={10}></ArticlesComponent>
-                    {/*<ArticlesLoader></ArticlesLoader>*/}
+                    
+                    <ArticlesLoader></ArticlesLoader>
                 </div>
             </div>
         </>

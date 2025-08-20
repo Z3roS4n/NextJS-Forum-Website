@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoadingComponent from "../ui/loading";
+import ApiRequest from "@/lib/apiRequest";
 
 interface NotifDropdownParams {
     type?: 'notifications';
@@ -35,9 +36,7 @@ const NotifDropdownComponent = ({ type = 'notifications' }: NotifDropdownParams)
     const { data: notifications, isLoading, error } = useQuery<User_Mention_Article_Notification[]>({
         queryKey: [type, user?.id],
         queryFn: async () => {
-            const res = await fetch(`/api/notifications?filter=${filter}`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
+            return await ApiRequest.getData({ url: '/api/notifications', params: { filter: filter } });
         },
         enabled: !!user,
         staleTime: 1000 * 10,

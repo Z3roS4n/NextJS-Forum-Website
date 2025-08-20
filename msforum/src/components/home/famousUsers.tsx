@@ -1,5 +1,6 @@
 "use client"
 
+import ApiRequest from "@/lib/apiRequest";
 import { TopUsersResponse } from "@/types/api"
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react"
@@ -14,9 +15,7 @@ const FamousUsers = ({ limit }: FamousUsersParams) => {
     const { data: scoreboard, isLoading, error } = useQuery<TopUsersResponse>({
         queryKey: ['scoreboard'],
         queryFn: async () => {
-            const res = await fetch(`/api/topUsers?limit=${limit}`);
-            if (!res.ok) throw new Error('Errore nel fetch');
-            return res.json();
+            return await ApiRequest.getData({ url: '/api/topUsers', params: { limit: limit } });
         },
         enabled: true,
         staleTime: 1000 * 120,
