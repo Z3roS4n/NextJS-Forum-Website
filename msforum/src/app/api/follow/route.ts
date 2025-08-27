@@ -1,9 +1,9 @@
 import { setError, setStatus } from "@/lib/api-status";
 import { PostFollow } from "@/types/api";
 import { NextRequest, NextResponse } from "next/server";
-import { userQuery } from "../user/route";
 import { currentUser } from "@clerk/nextjs/server";
 import { error } from "console";
+import { userQuery } from "@/lib/prisma-queries";
 
 export const GET = async (req: NextRequest) => {
     try {
