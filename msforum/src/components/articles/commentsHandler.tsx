@@ -10,11 +10,10 @@ import { useState } from "react";
 
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { UpvoteComment } from "@/generated/prisma";
 
 import { faCircleUp, faCircleDown, faReply, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import LoadingComponent from "../ui/loading";
+import LoadingComponent from "@/components/ui/loading";
 import ApiRequest from "@/lib/apiRequest";
 
 const CommentHandler = () => {

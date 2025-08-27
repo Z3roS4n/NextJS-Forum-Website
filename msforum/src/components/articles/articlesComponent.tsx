@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import SelectComponent from "../ui/select";
 import { useQuery } from "@tanstack/react-query";
-import LoadingComponent from "../ui/loading";
+import LoadingComponent from "@/components/ui/loading";
 
 interface Params {
     user_id?: string;

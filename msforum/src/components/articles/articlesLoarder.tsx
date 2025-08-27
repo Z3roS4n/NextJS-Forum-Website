@@ -4,7 +4,7 @@ import { settings } from "@/lib/defaultSiteSettings";
 import { Article_Category_Author, Category } from "@/types/components";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import LoadingComponent from "../ui/loading";
+import LoadingComponent from "@/components/ui/loading";
 import Link from "next/link";
 import SelectComponent from "../ui/select";
 import WindowActions from "@/lib/windowActions";
