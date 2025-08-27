@@ -7,14 +7,9 @@ import MyProfile from "@/components/profile/my-profile";
 import { Author_Subscription } from "@/types/components";
 
 const ProfilePage = async () => {
-    const user = await currentUser();
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/user?id=${user?.id}`, { next: { revalidate: 10 } });
-    const userInfo: Author_Subscription = await res.json();
-
     return (
         <div className="page-container">
-            <MyProfile userInfo={userInfo}></MyProfile>
+            <MyProfile></MyProfile>
         </div>
     )
 }

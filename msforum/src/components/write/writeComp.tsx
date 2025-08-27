@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import ReadMeViewer from "../profile/other-user/readmeviewer";
 import SelectComponent from "../ui/select";
+import ApiRequest from "@/lib/apiRequest";
 
 // import dinamico per evitare SSR issues con react-md-editor
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
@@ -23,11 +24,10 @@ const WriteComp = ({ categories }: Params) => {
     const [category, setCategory] = useState<number>(0);
     const [content, setContent] = useState<string>("");
 
-    const onSubmit = async (): Promise<void> => {
+    const onSubmit = () => {
         if (!user?.id || typeof category !== "number" || isNaN(category)) {
-            return;
+            return router.push("/");;
         }
-
         const articleData: Article = {
             idart: null,
             user_id: user.id,
@@ -36,17 +36,8 @@ const WriteComp = ({ categories }: Params) => {
             content: content || "",
             datetime: new Date().getMilliseconds(), // meglio ISO string
         };
-
-        console.log(articleData)
-
-        const post_article = await fetch("/api/manageArticle", {
-            method: "POST",
-            cache: "no-store",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(articleData),
-        });
-
-        if (post_article.ok) router.push("/articles");
+        ApiRequest.postData({ url: "/api/manageArticle", body: articleData })
+        router.push("/articles");
     };
 
     return (

@@ -20,7 +20,7 @@ const ArticlesComponent = ({limitIndex = 20, user_id}: Params) => {
     const { data: articles, isLoading: articlesLoading } = useQuery<Article_Category_Author[]>({
         queryKey: ['articles', user_id],
         queryFn: async () => {
-            let queryParams = 'legacy=true&';
+            let queryParams = '';
             if(user_id)
                 queryParams += `user_id=${user_id}`
 

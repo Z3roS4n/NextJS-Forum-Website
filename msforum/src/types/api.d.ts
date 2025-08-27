@@ -1,7 +1,6 @@
 import { Author_Subscription, User_Subscription } from "./components";
 
 export interface PostUserInformations {
-    action: 'set_bio' | 'set_readme' | 'set_picture';
     data: {
         bio: string | null;
         readme: string | null;

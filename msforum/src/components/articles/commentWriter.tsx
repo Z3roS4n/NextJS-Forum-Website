@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { NextResponse } from "next/server";
+import ApiRequest from "@/lib/apiRequest";
 
 interface CommentWriterParams {
     onSubmit: (comment: PostCommentResponse) => void;
@@ -21,7 +22,6 @@ const CommentWriter = ({ onSubmit, action = 'comment', reply_to }: CommentWriter
     const { isSignedIn, user } = useUser()
 
     const submitComment = async (content: string): Promise<PostCommentResponse> => {
-
         const body: PostCommentRequest = {
             action: action,
             data: {
@@ -31,19 +31,7 @@ const CommentWriter = ({ onSubmit, action = 'comment', reply_to }: CommentWriter
                 reply_to: reply_to ? reply_to : null
             }
         }
-
-        const request = await fetch(`/api/comments`, {
-            method: "POST",
-            cache: "no-store",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
-
-        const response: PostCommentResponse = (await request.json());
-
-        return response;
+        return await ApiRequest.postData({ url: '/api/comments', body: body });
     }
 
     const addComment = async (content: string) => {

@@ -15,6 +15,7 @@ import { UpvoteComment } from "@/generated/prisma";
 import { faCircleUp, faCircleDown, faReply, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoadingComponent from "../ui/loading";
+import ApiRequest from "@/lib/apiRequest";
 
 const CommentHandler = () => {
     const { article }  = useParams()
@@ -40,20 +41,8 @@ const CommentHandler = () => {
     };
 
     const toggleUpvote = useMutation({
-        mutationFn: async (idcomment: number, action = 'toggle_upvote') => {
-            const res = await fetch(`/api/comments`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: action,
-                    data: {
-                        idcomment: idcomment
-                    }
-                })
-            })
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
-        },
+        mutationFn: async (idcomment: number, action = 'toggle_upvote') => 
+            await ApiRequest.postData({ url: '/api/comments', body: { action: action, data: { idcomment: idcomment }} }),
         onMutate: async (notifId: number) => {
             await queryClient.cancelQueries({ queryKey: ['article_comments', 'upvotes'] });
             const prevData = queryClient.getQueryData<Comment_Upvotes[]>(['article_comments', 'upvotes']);
@@ -86,20 +75,8 @@ const CommentHandler = () => {
     })
 
     const addReply = useMutation({
-        mutationFn: async (idcomment: number, action = 'reply') => {
-            const res = await fetch(`/api/comments`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: action,
-                    data: {
-                        idcomment: idcomment
-                    }
-                })
-            })
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
-        },
+        mutationFn: async (idcomment: number, action = 'reply') => 
+            await ApiRequest.postData({ url: '/api/comments', body: { action: action, data: { idcomment: idcomment }} }),
         onMutate: async (notifId: number) => {
             await queryClient.cancelQueries({ queryKey: ['article_comments', 'upvotes'] });
             const prevData = queryClient.getQueryData<Comment_Upvotes[]>(['article_comments', 'upvotes']);
@@ -133,22 +110,14 @@ const CommentHandler = () => {
 
     const { data: comments } = useQuery<Comment_Author_Subscription[]>({
         queryKey: ['article_comments'], 
-        queryFn: async () => {
-            const res = await fetch(`/api/comments?idart=${article}`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
-        },
+        queryFn: async () => await ApiRequest.getData({ url: '/api/comments', params: { idart: Number(article) } }),
         staleTime: 1000 * 3,
         gcTime: 1000 * 3,
     })
 
     const { data: upvotes } = useQuery<Comment_Upvotes[]>({
         queryKey: ['article_comments', 'upvotes'], 
-        queryFn: async () => {
-            const res = await fetch(`/api/comments?idart=${article}&upvotes=true`);
-            if(!res.ok) throw new Error('Fetch Error!');
-            return res.json();
-        },
+        queryFn: async () => await ApiRequest.getData({ url: '/api/comments', params: { idart: Number(article), upvotes: true } }),
         staleTime: 1000 * 3,
         gcTime: 1000 * 3,
     })

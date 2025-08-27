@@ -29,10 +29,14 @@ const NavBar = () => {
                     <Image className="rounded-2xl ml-3" src={user.imageUrl ?? "/default-profile.png"} alt="Profile" width={30} height={30} />
                     : <p>N.D.</p>}
                     </Link>*/}
+
+                    <Link className="pr-6 font-medium" href='/write'>Write</Link>
+
                     <div className="flex flex-row gap-4 items-center">
-                        <NotifDropdownComponent/>
+                        {/*<NotifDropdownComponent/>*/}
                         <UserButton userProfileUrl="/profile" showName></UserButton>  
                     </div>
+
 
                     
                 </SignedIn>
