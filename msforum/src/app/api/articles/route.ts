@@ -1,27 +1,9 @@
 import { PrismaPromise } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { userQuery } from "../user/route";
 import { settings } from "@/lib/defaultSiteSettings";
+import { articlesQuery } from "@/lib/prisma-queries";
 
-export const articlesQuery = {
-    idart: true,
-    idcat: true,
-    title: true,
-    content: true,
-    user_id: true,
-    datetime: true,
-    category: {
-        select: {
-            idcat: true,
-            name: true,
-            description: true,
-        },
-    },
-    author: {
-        select: userQuery,
-    }
-}
 
 export async function GET(req: NextRequest) {
     try {

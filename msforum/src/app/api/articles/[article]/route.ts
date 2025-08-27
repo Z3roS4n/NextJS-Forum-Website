@@ -1,8 +1,8 @@
 import { setError } from "@/lib/api-status";
 import { prisma } from "@/lib/prisma";
+import { userQuery } from "@/lib/prisma-queries";
 
 import { NextRequest, NextResponse } from "next/server";
-import { userQuery } from "../../user/route";
 
 export const GET = async (req: NextRequest, { params }: { params: Promise<{ article: string }> }) => {
     try {

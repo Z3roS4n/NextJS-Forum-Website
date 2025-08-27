@@ -2,22 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
 import { PostUserInformations } from "@/types/api";
-
-export const userQuery = {
-    user_id: true,
-    username: true,
-    email: true,
-    bio: true,
-    readme: true,
-    profile_picture: true,
-    subscription: {
-        select: {
-            idsub: true,
-            name: true,
-            description: true,
-        },
-    },
-}
+import { userQuery } from "@/lib/prisma-queries";
 
 export async function GET(req: NextRequest) {
     try {
